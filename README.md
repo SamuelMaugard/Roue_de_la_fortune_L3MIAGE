@@ -2,7 +2,7 @@
 
 # Equipe
 
-Bydon Sacha
-Désiré Stéphane
-Maugard Samuel
-Mercuri Sabrina
+Bydon Sacha  
+Désiré Stéphane  
+Maugard Samuel  
+Mercuri Sabrina  
