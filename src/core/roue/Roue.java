@@ -40,7 +40,8 @@ public class Roue {
 	}
 	
 	public Case lancerRoue () {
-		return cases.get(Random.nextInt(cases.size()));
+		Random r = new Random();
+		return cases.get(r.nextInt(cases.size()));
 	}
 	
 }
