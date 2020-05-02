@@ -38,4 +38,9 @@ public class Roue {
 		cases.add(new CaseHoldUp());
 		cases.add(new CasePasse());
 	}
+	
+	public Case lancerRoue () {
+		return cases.get(Random.nextInt(cases.size()));
+	}
+	
 }
