@@ -20,7 +20,10 @@ public class Serveur {
         server = new SocketIOServer(config);
         setUpEventsListeners();
         server.start();
+        try { Thread.sleep(1000);
+        } catch (InterruptedException e) { e.printStackTrace(); }
         dispIP();
+        System.out.println("\nAttente des joueurs ...");
     }
 
     public void setUpEventsListeners() {

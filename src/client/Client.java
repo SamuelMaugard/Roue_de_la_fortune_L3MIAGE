@@ -48,30 +48,27 @@ public class Client {
     }
 
     public void setUpEventsListeners() {
+
+        //Custom listeners
         mSocket.on("pseudo", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
                 mSocket.emit("reponse-pseudo", pseudo);
             }
         });
-        //conection listeners
+
+        //connection listeners
         mSocket.on("connect", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) {
-                System.out.println("Connecté");
-            }
+            public void call(Object... objects) { System.out.println("Connecté"); }
         });
         mSocket.on("connect_failed", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) {
-                System.out.println("Connexion échoué");
-            }
+            public void call(Object... objects) { System.out.println("Connexion échoué"); }
         });
         mSocket.on("disconnect", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) {
-                System.out.println("Déconnexion");
-            }
+            public void call(Object... objects) { System.out.println("Déconnexion"); }
         });
     }
 
