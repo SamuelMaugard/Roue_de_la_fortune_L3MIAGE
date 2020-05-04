@@ -16,7 +16,7 @@ public class Phrase {
 	
 	
 	/**
-	 * @return la chaine de caractère avec les tirets
+	 * @return la chaine de caractÃ¨re avec les tirets
 	 */
 	private String genererPhrase() {
 		String s="";
@@ -33,8 +33,8 @@ public class Phrase {
 
 
 	/**
-	 * La méthode remplace les caractères de la phrase à trouver
-	 * @param caractere proposé par le joueur
+	 * La mÃ©thode remplace les caractÃ¨res de la phrase Ã  trouver
+	 * @param caractere proposÃ© par le joueur
 	 * @return le nb de caractere trouver pour pouvoir calculer les gains
 	 */
 	public int remplacerLettre(char caractere) {
@@ -54,8 +54,8 @@ public class Phrase {
 	}
 	
 	/**
-	 * @param caractere proposé par le joueur 
-	 * @return si le caractère a deja été proposer ou pas
+	 * @param caractere proposÃ© par le joueur
+	 * @return si le caractÃ¨re a deja Ã©tÃ© proposer ou pas
 	 */
 	private boolean verifDejaPropose(char caractere) {
 		boolean estDejaProp = false;
@@ -68,7 +68,7 @@ public class Phrase {
 
 
 	public String toString() {
-		// TODO a faire avec les espaces entre les tirets (boucle sur les caractères)
+		// TODO a faire avec les espaces entre les tirets (boucle sur les caractÃ¨res)
 		return "";
 	}
 }
