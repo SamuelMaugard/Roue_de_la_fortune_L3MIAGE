@@ -4,7 +4,8 @@ import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
-import io.socket.client.IO;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Serveur {
 
@@ -19,6 +20,7 @@ public class Serveur {
         server = new SocketIOServer(config);
         setUpEventsListeners();
         server.start();
+        dispIP();
     }
 
     public void setUpEventsListeners() {
@@ -44,6 +46,21 @@ public class Serveur {
                 System.out.println(res+" a rejoint la partie");
             }
         });
+    }
+
+    public void dispIP() {
+        InetAddress inetAddress = null;
+        try {
+            inetAddress = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        System.out.println("\n--------------------------------------");
+        System.out.println("Se connecter:");
+        System.out.println("LOCAL: http://127.0.0.1:10101/");
+        System.out.println("EXTERNE: http://" + inetAddress.getHostAddress() + ":10101/");
+        System.out.println("--------------------------------------");
+
     }
 
     public static void main(String[] args) {
