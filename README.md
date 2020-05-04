@@ -12,5 +12,5 @@ Mercuri Sabrina
 
 * Installer Maven  
 * Installer les dépendances du projet: *mvn clean install*
-* Lancer le Serveur: Excuter la classe *src/serveur/Serveur.java*  
-* Lancer le Client: Excuter la classe *src/client/Client.java*  
+* Lancer le Serveur: *mvn exec:java -Dexec.mainClass=serveur.Serveur*  
+* Lancer le Client: *mvn exec:java -Dexec.mainClass=client.Client*  

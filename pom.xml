@@ -50,11 +50,11 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>serveur.Serveur
+                    <!--<mainClass>serveur.Serveur
                     </mainClass>
                         <arguments>
                                 <argument></argument>
-                        </arguments>
+                        </arguments>-->
                 </configuration>
             </plugin>
 
