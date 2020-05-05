@@ -4,12 +4,17 @@ import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+
+import joueur.Joueur;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Serveur {
 
     private SocketIOServer server;
+    private GameManager game;
 
     public Serveur() {
         Configuration config = new Configuration();
@@ -19,6 +24,7 @@ public class Serveur {
         socketConfig.setReuseAddress(true);
         server = new SocketIOServer(config);
         setUpEventsListeners();
+        game = new GameManager(this);
         server.start();
         try { Thread.sleep(1000);
         } catch (InterruptedException e) { e.printStackTrace(); }
@@ -47,6 +53,10 @@ public class Serveur {
             @Override
             public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest){
                 System.out.println(res+" a rejoint la partie");
+                game.addJoueur(new Joueur(res));
+                if(server.getAllClients().size()==2) {
+                	game.newGame();
+                }
             }
         });
     }
@@ -65,9 +75,10 @@ public class Serveur {
         System.out.println("--------------------------------------");
 
     }
+    
+    
 
     public static void main(String[] args) {
         Serveur serv = new Serveur();
     }
-
 }
