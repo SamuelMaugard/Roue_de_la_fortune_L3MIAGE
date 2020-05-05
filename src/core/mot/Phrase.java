@@ -6,7 +6,10 @@ public class Phrase {
 	private String aTrouver; // phrase avec les trous 
 	private char[] lettrePropose;
 	private int indexChar;
-	
+
+	/**
+	 * @param rep full maj
+	 */
 	public Phrase(String rep) {
 		this.rep = rep;
 		aTrouver = genererPhrase();
@@ -68,7 +71,10 @@ public class Phrase {
 
 
 	public String toString() {
-		// TODO a faire avec les espaces entre les tirets (boucle sur les caractères)
-		return "";
+		String s = "";
+		for (int i = 0; i < aTrouver.length(); i++) {
+			s+=aTrouver.charAt(i)+" ";
+		}
+		return s;
 	}
 }
