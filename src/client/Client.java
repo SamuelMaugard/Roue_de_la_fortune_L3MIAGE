@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.net.URISyntaxException;
 
 public class Client {
@@ -21,6 +23,7 @@ public class Client {
     private JLabel contentLabel;
     private JButton btnOK;
     private ActionListener currentListener;
+    private JScrollPane scrPane;
 
     public Client() {
         //Window params
@@ -41,9 +44,12 @@ public class Client {
 
         //Contents
         JPanel contentPanel = new JPanel();
-        JScrollPane scrPane = new JScrollPane(contentPanel);
-
-        //contentPanel.setLayout(new ScrollPaneLayout());
+        scrPane = new JScrollPane(contentPanel);
+        scrPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
+            public void adjustmentValueChanged(AdjustmentEvent e) {
+                e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+            }
+        });
         contentLabel = new JLabel("");
         contentPanel.add(contentLabel);
         mainPanel.add(scrPane, BorderLayout.CENTER);
