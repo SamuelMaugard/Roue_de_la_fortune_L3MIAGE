@@ -11,6 +11,7 @@ import joueur.Joueur;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Serveur {
 
@@ -80,13 +81,15 @@ public class Serveur {
         }
         reponse = reponse.substring(0,reponse.length()-1);
         if(reponse.equals(game.getPhrase().getPhraseJuste())) {
-        	System.out.println(repJoueur[repJoueur.length-1]+" a trouver la reponse");
+        	System.out.println(repJoueur[repJoueur.length-1]+" a trouvé la reponse");
+            server.getBroadcastOperations().sendEvent("maj_manche_rapide",repJoueur[repJoueur.length-1]+" a trouvé la réponse");
         	game.setEstTrouve(true);
         }
         else {
-        	System.out.println(repJoueur[repJoueur.length-1]+" a proposer une mauvaise reponse veuillez ressayer");
-        	socketIOClient.sendEvent("manche_rapide");
-        }				
+        	System.out.println(repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
+            server.getBroadcastOperations().sendEvent("maj_manche_rapide", repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
+            //socketIOClient.sendEvent("manche_rapide");
+        }
 	}
 
     public void dispIP() {
