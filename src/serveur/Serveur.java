@@ -5,6 +5,7 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 
+import core.ConsoleColors;
 import joueur.Joueur;
 
 import java.net.InetAddress;
@@ -37,7 +38,7 @@ public class Serveur {
         server.addConnectListener(new ConnectListener() {
             @Override
             public void onConnect(SocketIOClient socketIOClient) {
-                System.out.println("Connexion de ("+socketIOClient.getRemoteAddress()+")");
+                System.out.println(ConsoleColors.CYAN + "Connexion de ("+socketIOClient.getRemoteAddress()+")" + ConsoleColors.RESET);
                 socketIOClient.sendEvent("pseudo");
             }
         });
@@ -52,9 +53,12 @@ public class Serveur {
         server.addEventListener("reponse-pseudo", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest){
-                System.out.println(res+" a rejoint la partie");
                 game.addJoueur(new Joueur(res));
-                if(server.getAllClients().size()==2) {
+                System.out.println(ConsoleColors.GREEN + res + " a rejoint la partie " +
+                        "(" + game.getNumberplayers()+"/2)" + ConsoleColors.RESET
+                );
+                if(game.getNumberplayers() == 2) {
+                    System.out.println(ConsoleColors.CYAN + "--------------------------------------" + ConsoleColors.RESET);
                 	game.newGame();
                 }
             }

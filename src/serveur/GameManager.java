@@ -13,7 +13,7 @@ public class GameManager {
 	private Serveur server;
 	
 	public GameManager(Serveur serveur) {
-		this.server=serveur;
+		this.server = serveur;
 		this.joueurs = new ArrayList<Joueur>();
 		liste = new ListePhrase();
 		phrase = new Phrase(/*liste.getPhrase()*/"");
@@ -25,5 +25,9 @@ public class GameManager {
 
 	public void newGame() {
 		System.out.println("\nLe jeu commence");		
+	}
+
+	public int getNumberplayers() {
+		return joueurs.size();
 	}
 }
