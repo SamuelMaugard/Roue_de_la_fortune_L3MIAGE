@@ -5,7 +5,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
 import java.net.URISyntaxException;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Client {
@@ -44,8 +44,15 @@ public class Client {
     public String askPseudo() {
         Scanner keyboard = new Scanner(System.in);
         System.out.println("Entrez votre pseudo:");
-        return keyboard.next();
+        return keyboard.nextLine();
     }
+
+    public String reponseMancheRapide() {
+    	Scanner keyboard = new Scanner(System.in);
+    	String rep = keyboard.nextLine();
+    	rep+=" "+pseudo;
+    	return rep;
+    }	
 
     public void setUpEventsListeners() {
 
@@ -56,7 +63,25 @@ public class Client {
                 mSocket.emit("reponse-pseudo", pseudo);
             }
         });
-
+        // reponse manche rapide
+        mSocket.on("manche_rapide", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	System.out.println("Debut de la manche rapide :");
+            	System.out.println("trouver la phrase suivante :\n");
+            	System.out.println((String)objects[0]);
+            	String rep = reponseMancheRapide();
+            	mSocket.emit("reponse_manche_rapide",rep);
+            }
+        });
+        // maj reponse
+        mSocket.on("maj_manche_rapide", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	System.out.println((String)objects[0]);
+            }
+        });
+        
         //connection listeners
         mSocket.on("connect", new Emitter.Listener() {
             @Override

@@ -52,7 +52,7 @@ public class Serveur {
         //Réponse pseudo
         server.addEventListener("reponse-pseudo", String.class, new DataListener<String>() {
             @Override
-            public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest){
+            public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest) throws InterruptedException{
                 game.addJoueur(new Joueur(res));
                 System.out.println(ConsoleColors.GREEN + res + " a rejoint la partie " +
                         "(" + game.getNumberplayers()+"/2)" + ConsoleColors.RESET
@@ -62,8 +62,32 @@ public class Serveur {
                 	game.newGame();
                 }
             }
+        }); 
+        // reponse manche rapide
+        server.addEventListener("reponse_manche_rapide", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	reponseMancheRapide(rep,socketIOClient);
+            }
         });
     }
+    
+    private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
+    	String[] repJoueur = rep.split(" ");
+        String reponse = "";
+        for(int i=0;i<repJoueur.length-1;i++) {
+        	reponse+=repJoueur[i]+" ";
+        }
+        reponse = reponse.substring(0,reponse.length()-1);
+        if(reponse.equals(game.getPhrase().getPhraseJuste())) {
+        	System.out.println(repJoueur[repJoueur.length-1]+" a trouver la reponse");
+        	game.setEstTrouve(true);
+        }
+        else {
+        	System.out.println(repJoueur[repJoueur.length-1]+" a proposer une mauvaise reponse veuillez ressayer");
+        	socketIOClient.sendEvent("manche_rapide");
+        }				
+	}
 
     public void dispIP() {
         InetAddress inetAddress = null;
@@ -80,7 +104,9 @@ public class Serveur {
 
     }
     
-    
+    public SocketIOServer getSocketServeur() {
+    	return server;
+    }
 
     public static void main(String[] args) {
         Serveur serv = new Serveur();

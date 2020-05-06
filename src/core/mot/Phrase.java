@@ -1,5 +1,7 @@
 package core.mot;
 
+import java.util.*;
+
 public class Phrase {
 
 	private String rep; // phrase complete pour comparer
@@ -69,7 +71,28 @@ public class Phrase {
 		return estDejaProp;
 	}
 
+	public String getPhraseATrouver() {
+		return aTrouver;
+	}
+	
+	public String getPhraseJuste() {
+		return rep;
+	}
 
+
+	public void decouvreUneLettre() {
+		Random rdm = new Random();
+		ArrayList<Integer> indexChar = new ArrayList<Integer>();
+		for(int i=0;i<aTrouver.length();i++) {
+			if(aTrouver.charAt(i)=='_') {
+				indexChar.add(i);
+			}
+		}
+		char tab[]= aTrouver.toCharArray();
+		int index = indexChar.get(rdm.nextInt(indexChar.size()));
+		tab[index]=rep.charAt(index);
+		aTrouver= String.valueOf(tab);
+	}
 	public String toString() {
 		String s = "";
 		for (int i = 0; i < aTrouver.length(); i++) {
