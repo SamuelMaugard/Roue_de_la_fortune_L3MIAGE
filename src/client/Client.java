@@ -51,6 +51,7 @@ public class Client {
             }
         });
         contentLabel = new JLabel("");
+        //contentLabel.setFont(new Font(Font.DIALOG, Font.PLAIN, contentLabel.getFont().getSize()));
         contentPanel.add(contentLabel);
         mainPanel.add(scrPane, BorderLayout.CENTER);
 
@@ -86,14 +87,15 @@ public class Client {
     }
 
     public void askServer() {
-        addToContent("Entrez l'adresse du serveur host.<br>" + "(http://127.0.0.1:10101/ en local.)<br>");
+        addToContent("Entrez l'adresse du serveur host.");
+        addToContent("(http://127.0.0.1:10101/ en local.)");
         textField.setText("http://127.0.0.1:10101/");
         ActionListener servLog = new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 String val = textField.getText();
                 textField.setText("");
                 serverAddress = val;
-                addToContent("Serveur choisi: " + val + "<br>");
+                addToContent("Serveur choisi: " + val);
                 askPseudo();
             }
         };
@@ -102,13 +104,13 @@ public class Client {
     }
 
     public void askPseudo() {
-        addToContent("Entrez votre pseudo:<br>");
+        addToContent("Entrez votre pseudo:");
         ActionListener pseudoListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 String val = textField.getText();
                 textField.setText("");
                 pseudo = val;
-                addToContent("Pseudo choisi: " + val + "<br>");
+                addToContent("Pseudo choisi: " + val);
                 setUpClient();
                 setUpEventsListeners();
                 mSocket.connect();
@@ -124,7 +126,8 @@ public class Client {
         if(content.length() >= 13) {
             content = content.substring(6, content.length()-7);
         }
-        content = "<html>" + content + s + "</html>";
+        content = "<html>" + content + "<pre>" + s + "</pre>" + "</html>";
+
         contentLabel.setText(content);
     }
 
@@ -134,7 +137,7 @@ public class Client {
                 String val = textField.getText();
                 val=val.toUpperCase();
                 textField.setText("");
-                addToContent("Réponse envoyé: " + val + "<br>");
+                addToContent("Réponse envoyé: " + val);
                 val+=" "+pseudo;
                 mSocket.emit("reponse_manche_rapide",val);
             }
@@ -157,9 +160,9 @@ public class Client {
         mSocket.on("manche_rapide", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
-            	addToContent("Debut de la manche rapide :<br>");
-                addToContent("trouver la phrase suivante :<br>");
-                addToContent((String)objects[0] + "<br>");
+            	addToContent("Debut de la manche rapide :");
+                addToContent("trouver la phrase suivante :");
+                addToContent((String)objects[0]);
             	reponseMancheRapide();
             }
         });
@@ -167,22 +170,22 @@ public class Client {
         mSocket.on("maj_manche_rapide", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
-            	addToContent((String)objects[0] + "<br>");
+            	addToContent((String)objects[0]);
             }
         });
         
         //connection listeners
         mSocket.on("connect", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) { addToContent("Connecté<br>"); }
+            public void call(Object... objects) { addToContent("Connecté"); }
         });
         mSocket.on("connect_failed", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) { addToContent("Connexion échoué<br>"); }
+            public void call(Object... objects) { addToContent("Connexion échoué"); }
         });
         mSocket.on("disconnect", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) { addToContent("Déconnexion<br>"); }
+            public void call(Object... objects) { addToContent("Déconnexion"); }
         });
     }
 
