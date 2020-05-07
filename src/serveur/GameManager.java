@@ -28,8 +28,7 @@ public class GameManager {
 	public void newGame() throws InterruptedException {
 		System.out.println("\nLe bon nombre de personne est présent\n");
 		System.out.println("La partie commence\n");
-		
-		
+
 			System.out.println("-------- La manche 1 commence -------\n");
 			mancheRapide();
 	}
@@ -45,12 +44,13 @@ public class GameManager {
 
 	public void updateMancheRapide() {
 		if(estTrouve==false) {
+
+			//TODO vérifier si le mot est pas déjà complet (java.lang.IllegalArgumentException: Random bound must be positive)
 			phrase.decouvreUneLettre();
+
 			System.out.println(phrase.toString());
 			server.getSocketServeur().getBroadcastOperations().sendEvent("maj_manche_rapide",phrase.toString());
 			new TimeOut(5, this, "MancheRapide");
-		} else {
-
 		}
 	}
 
