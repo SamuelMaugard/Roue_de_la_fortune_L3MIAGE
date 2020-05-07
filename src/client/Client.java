@@ -92,11 +92,13 @@ public class Client {
         textField.setText("http://127.0.0.1:10101/");
         ActionListener servLog = new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                String val = textField.getText();
-                textField.setText("");
-                serverAddress = val;
-                addToContent("Serveur choisi: " + val);
-                askPseudo();
+                if(textField.getText().length() > 0) {
+                    String val = textField.getText();
+                    textField.setText("");
+                    serverAddress = val;
+                    addToContent("Serveur choisi: " + val);
+                    askPseudo();
+                }
             }
         };
         currentListener = servLog;
@@ -107,13 +109,16 @@ public class Client {
         addToContent("Entrez votre pseudo:");
         ActionListener pseudoListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                String val = textField.getText();
-                textField.setText("");
-                pseudo = val;
-                addToContent("Pseudo choisi: " + val);
-                setUpClient();
-                setUpEventsListeners();
-                mSocket.connect();
+                if(textField.getText().length() > 0) {
+                    String val = textField.getText();
+                    textField.setText("");
+                    pseudo = val;
+                    addToContent("Pseudo choisi: " + val);
+                    setUpClient();
+                    setUpEventsListeners();
+                    mSocket.connect();
+                }
+
             }
         };
         btnOK.removeActionListener(currentListener);
@@ -134,12 +139,15 @@ public class Client {
     public void reponseMancheRapide() {
         ActionListener reponseListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                String val = textField.getText();
-                val=val.toUpperCase();
-                textField.setText("");
-                addToContent("Réponse envoyé: " + val);
-                val+=" "+pseudo;
-                mSocket.emit("reponse_manche_rapide",val);
+                if(textField.getText().length() > 0) {
+                    String val = textField.getText();
+                    val=val.toUpperCase();
+                    textField.setText("");
+                    addToContent("Réponse envoyé: " + val);
+                    val+=" "+pseudo;
+                    mSocket.emit("reponse_manche_rapide",val);
+                }
+
             }
         };
         btnOK.removeActionListener(currentListener);
@@ -150,21 +158,23 @@ public class Client {
     public void choixJoueur() {
     	ActionListener choixListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                String val = textField.getText();
-                textField.setText("");
-                val=val.toUpperCase();
-                switch(val) {
-                	case "C":
-                		mSocket.emit("consonne");
-                		break;
-                	case "V":
-                		mSocket.emit("voyelle");
-                		break;
-                	case "R":
-                		mSocket.emit("reponse");
-                	default:
-                		addToContent("choix erroné veuillez recommencer");
-                		choixJoueur();
+                if(textField.getText().length() > 0) {
+                    String val = textField.getText();
+                    textField.setText("");
+                    val=val.toUpperCase();
+                    switch(val) {
+                        case "C":
+                            mSocket.emit("consonne");
+                            break;
+                        case "V":
+                            mSocket.emit("voyelle");
+                            break;
+                        case "R":
+                            mSocket.emit("reponse");
+                        default:
+                            addToContent("choix erroné veuillez recommencer");
+                            choixJoueur();
+                    }
                 }
             }
         };
@@ -176,15 +186,17 @@ public class Client {
     public void consonne() {
     	ActionListener consonneListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
-                String val = textField.getText();
-                textField.setText("");
-                val=val.toLowerCase();
-                if(isConsonne(val)) {
-                	mSocket.emit("consonne_prop",val);
-                }
-                else {
-                	addToContent("Veuillez rentrez une valeur correcte");
-                	consonne();
+                if(textField.getText().length() > 0) {
+                    String val = textField.getText();
+                    textField.setText("");
+                    val=val.toLowerCase();
+                    if(isConsonne(val)) {
+                        mSocket.emit("consonne_prop",val);
+                    }
+                    else {
+                        addToContent("Veuillez rentrez une valeur correcte");
+                        consonne();
+                    }
                 }
             }
         };
