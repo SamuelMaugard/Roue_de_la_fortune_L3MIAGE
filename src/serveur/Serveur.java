@@ -6,6 +6,7 @@ import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 
 import core.ConsoleColors;
+import io.netty.bootstrap.ServerBootstrap;
 import joueur.Joueur;
 
 import java.net.InetAddress;
@@ -70,6 +71,30 @@ public class Serveur {
             	reponseMancheRapide(rep,socketIOClient);
             }
         });
+        // choixConsonne
+        server.addEventListener("consonne", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	game.getJoueur(game.getPremierJoueur()).setChoixAction("C");
+            	getSocketServeur().getBroadcastOperations().sendEvent("consonne",game.getPremierJoueur());
+            }
+        });
+        // choixVoyelle
+        server.addEventListener("voyelle", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	game.getJoueur(game.getPremierJoueur()).setChoixAction("V");
+            	getSocketServeur().getBroadcastOperations().sendEvent("voyelle",game.getPremierJoueur());
+            }
+        });
+        // choixReponse
+        server.addEventListener("reponse", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	game.getJoueur(game.getPremierJoueur()).setChoixAction("R");
+            	getSocketServeur().getBroadcastOperations().sendEvent("reponse",game.getPremierJoueur());
+            }
+        });
     }
     
     private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
@@ -83,10 +108,10 @@ public class Serveur {
         	System.out.println(repJoueur[repJoueur.length-1]+" a trouvé la reponse");
         	game.setEstTrouve(true);
         	String infoClient = repJoueur[repJoueur.length-1]+" a trouvé la réponse";
-            server.getBroadcastOperations().sendEvent("maj_manche_rapide",infoClient);
             game.getJoueur(repJoueur[repJoueur.length-1]).setGainManche(500);
-            // envoyé un message comme quoi le joueur à trouvé la bonne rep et gagne 500 de gain
-
+            infoClient+=" et a gagné "+game.getJoueur(repJoueur[repJoueur.length-1]).getGainManche()+" de gain";
+            server.getBroadcastOperations().sendEvent("fin_manche_rapide",infoClient);
+            game.setPremierJoueur(repJoueur[repJoueur.length-1]);
             //Début de la manche longue
             game.mancheLongue();
         }

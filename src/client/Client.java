@@ -146,7 +146,63 @@ public class Client {
         currentListener = reponseListener;
         btnOK.addActionListener(reponseListener);
     }
-
+    
+    public void choixJoueur() {
+    	ActionListener choixListener = new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                String val = textField.getText();
+                textField.setText("");
+                val=val.toUpperCase();
+                switch(val) {
+                	case "C":
+                		mSocket.emit("consonne");
+                		break;
+                	case "V":
+                		mSocket.emit("voyelle");
+                		break;
+                	case "R":
+                		mSocket.emit("reponse");
+                	default:
+                		addToContent("choix erroné veuillez recommencer");
+                		choixJoueur();
+                }
+            }
+        };
+        btnOK.removeActionListener(currentListener);
+        currentListener = choixListener;
+        btnOK.addActionListener(choixListener);
+    }
+    
+    public void consonne() {
+    	ActionListener consonneListener = new ActionListener(){
+            public void actionPerformed(ActionEvent event){
+                String val = textField.getText();
+                textField.setText("");
+                val=val.toLowerCase();
+                if(isConsonne(val)) {
+                	mSocket.emit("consonne_prop",val);
+                }
+                else {
+                	addToContent("Veuillez rentrez une valeur correcte");
+                	consonne();
+                }
+            }
+        };
+        btnOK.removeActionListener(currentListener);
+        currentListener = consonneListener;
+        btnOK.addActionListener(consonneListener);
+    }
+    
+    public boolean isConsonne(String val) {
+    	if(val.length()>1 && val.length()==0) {
+    		return false;
+    	}
+    	else if(val.charAt(0)=='a' || val.charAt(0)=='e' || val.charAt(0)=='i' || val.charAt(0)=='o' || val.charAt(0)=='u' || val.charAt(0)=='y') {
+    		return false;
+    	}
+    	return true;
+    }
+    
     public void setUpEventsListeners() {
 
         //Custom listeners
@@ -166,11 +222,47 @@ public class Client {
             	reponseMancheRapide();
             }
         });
-        // maj reponse
+        // maj reponse manche rapide
         mSocket.on("maj_manche_rapide", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
             	addToContent((String)objects[0]);
+            }
+        });
+        // fin manche rapide
+        mSocket.on("fin_manche_rapide", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	addToContent((String)objects[0]);
+            }
+        });
+        // choix joueur
+        mSocket.on("choix_joueur", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	String nom =(String)objects[0];
+            	if(nom.equals(pseudo)) {
+            		addToContent("Choisissez un action à effectuer : ");
+            		addToContent("c : proposer une consonne, v proposer une voyelle, r proposer une reponse");
+            		choixJoueur();
+            	}
+            	else {
+            		addToContent((String)objects[0]+" doit choisir une action");
+            	}
+            }
+        });
+        // proposer consonne
+        mSocket.on("consonne", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	String nom =(String)objects[0];
+            	if(nom.equals(pseudo)) {
+            		addToContent("Proposez une consonne");
+            		consonne();
+            	}
+            	else {
+            		addToContent((String)objects[0]+" doit choisir une action");
+            	}
             }
         });
         

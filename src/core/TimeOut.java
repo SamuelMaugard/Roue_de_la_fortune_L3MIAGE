@@ -24,6 +24,8 @@ public class TimeOut {
             switch (function) {
                 case "MancheRapide":
                     gameManager.updateMancheRapide();
+                case "ChoixJoueur":
+                	gameManager.choixJoueur();
             }
             timer.cancel();
         }

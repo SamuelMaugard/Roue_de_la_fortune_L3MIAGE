@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 
 public class ListePhrase {
 
@@ -21,8 +22,7 @@ public class ListePhrase {
 	    {
 	      File file = new File("src/core/mot/phrases.txt");    
 	      FileReader fr = new FileReader(file);         
-	      BufferedReader br = new BufferedReader(fr);  
-	      StringBuffer sb = new StringBuffer();    
+	      BufferedReader br = new BufferedReader(fr);    
 	      String line;
 	      while((line = br.readLine()) != null)
 	      {

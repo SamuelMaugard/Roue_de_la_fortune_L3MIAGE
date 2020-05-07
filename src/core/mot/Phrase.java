@@ -81,23 +81,35 @@ public class Phrase {
 
 
 	public void decouvreUneLettre() {
-		Random rdm = new Random();
-		ArrayList<Integer> indexChar = new ArrayList<Integer>();
-		for(int i=0;i<aTrouver.length();i++) {
-			if(aTrouver.charAt(i)=='_') {
-				indexChar.add(i);
-			}
+		if(aTrouver.equals(rep)) {
+			
 		}
-		char tab[]= aTrouver.toCharArray();
-		int index = indexChar.get(rdm.nextInt(indexChar.size()));
-		tab[index]=rep.charAt(index);
-		aTrouver= String.valueOf(tab);
+		else {
+			Random rdm = new Random();
+			ArrayList<Integer> indexChar = new ArrayList<Integer>();
+			for(int i=0;i<aTrouver.length();i++) {
+				if(aTrouver.charAt(i)=='_') {
+					indexChar.add(i);
+				}
+			}
+			char tab[]= aTrouver.toCharArray();
+			int index = indexChar.get(rdm.nextInt(indexChar.size()));
+			tab[index]=rep.charAt(index);
+			aTrouver= String.valueOf(tab);
+		}
 	}
+	
 	public String toString() {
 		String s = "";
 		for (int i = 0; i < aTrouver.length(); i++) {
 			s+=aTrouver.charAt(i)+" ";
 		}
 		return s;
+	}
+
+
+	public void resetPhrase(String phrase) {
+		rep = phrase;
+		aTrouver = genererPhrase();
 	}
 }

@@ -4,12 +4,14 @@ public class Joueur {
 
 	private int gainManche;
 	private String nom;
+	private String choixAction;
 	private int gainTotal;
 	
 	public Joueur(String nom) {
 		setGainManche(0);
 		this.setNom(nom);
 		setGainTotal(0);
+		setChoixAction("");
 	}
 
 	public String getNom() {
@@ -34,5 +36,13 @@ public class Joueur {
 
 	public void setGainTotal(int gainTotal) {
 		this.gainTotal = gainTotal;
+	}
+
+	public String getChoixAction() {
+		return choixAction;
+	}
+
+	public void setChoixAction(String choixAction) {
+		this.choixAction = choixAction;
 	}
 }
