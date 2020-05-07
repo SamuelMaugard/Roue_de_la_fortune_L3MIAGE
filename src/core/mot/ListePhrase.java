@@ -1,12 +1,47 @@
 package core.mot;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class ListePhrase {
 
 	// TODO lire fichier pour les phrases
+	private ArrayList<String> phrases;
+	
+	public ListePhrase () {
+		phrases = new ArrayList<String>();
+		lireFichier();
+		assert(phrases.size()==20);
+	}
 
+	public void lireFichier() {
+		try
+	    {
+	      File file = new File("src/core/mot/phrases.txt");    
+	      FileReader fr = new FileReader(file);         
+	      BufferedReader br = new BufferedReader(fr);  
+	      StringBuffer sb = new StringBuffer();    
+	      String line;
+	      while((line = br.readLine()) != null)
+	      {
+	        phrases.add(line);    
+	      }
+	      fr.close();     
+	    }
+	    catch(IOException e)
+	    {
+	      e.printStackTrace();
+	    }
+	}
+	
 	public String getPhrase() {
 		// TODO retourne une phrase au pif
-		return null;
+		Random r = new Random();
+		String rep = phrases.get(r.nextInt(phrases.size()));
+		phrases.remove(rep);
+		return rep;
 	}
 	
 }
