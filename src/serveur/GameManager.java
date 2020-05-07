@@ -1,5 +1,7 @@
 package serveur;
 
+import com.corundumstudio.socketio.SocketIOClient;
+import core.ConsoleColors;
 import core.TimeOut;
 import core.mot.*;
 import joueur.Joueur;
@@ -107,6 +109,16 @@ public class GameManager {
 		}
 		else {
 			return joueurs.get(1);
+		}
+	}
+
+	public void deletePlayerBySocket(SocketIOClient so) {
+		for(int i=0; i<joueurs.size();i++) {
+			if(joueurs.get(i).cl == so) {
+				String n = joueurs.get(i).getNom();
+				joueurs.remove(i);
+				System.out.println(ConsoleColors.GREEN + "Déconnexion de " + n + " ("+joueurs.size()+"/2)" + ConsoleColors.RESET);
+			}
 		}
 	}
 }

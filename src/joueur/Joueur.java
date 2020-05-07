@@ -1,17 +1,21 @@
 package joueur;
 
+import com.corundumstudio.socketio.SocketIOClient;
+
 public class Joueur {
 
 	private int gainManche;
 	private String nom;
 	private String choixAction;
 	private int gainTotal;
+	public SocketIOClient cl;
 	
-	public Joueur(String nom) {
+	public Joueur(String nom, SocketIOClient client) {
 		setGainManche(0);
 		this.setNom(nom);
 		setGainTotal(0);
 		setChoixAction("");
+		cl = client;
 	}
 
 	public String getNom() {

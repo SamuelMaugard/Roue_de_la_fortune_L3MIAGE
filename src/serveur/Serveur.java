@@ -5,12 +5,14 @@ import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
 
+import com.corundumstudio.socketio.listener.ExceptionListener;
 import core.ConsoleColors;
-import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelHandlerContext;
 import joueur.Joueur;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 public class Serveur {
 
@@ -20,6 +22,18 @@ public class Serveur {
     public Serveur() {
         Configuration config = new Configuration();
         config.setHostname("127.0.0.1");
+        config.setExceptionListener(new ExceptionListener() {
+            @Override
+            public void onEventException(Exception e, List<Object> list, SocketIOClient socketIOClient) {}
+            @Override
+            public void onDisconnectException(Exception e, SocketIOClient socketIOClient) {}
+            @Override
+            public void onConnectException(Exception e, SocketIOClient socketIOClient) {}
+            @Override
+            public void onPingException(Exception e, SocketIOClient socketIOClient) {}
+            @Override
+            public boolean exceptionCaught(ChannelHandlerContext ctx, Throwable e) { return true; }
+        });
         config.setPort(10101);
         SocketConfig socketConfig = config.getSocketConfig();
         socketConfig.setReuseAddress(true);
@@ -47,14 +61,14 @@ public class Serveur {
         server.addDisconnectListener(new DisconnectListener() {
             @Override
             public void onDisconnect(SocketIOClient socketIOClient) {
-                System.out.println("Déconnexion de ("+socketIOClient.getRemoteAddress()+")");
+                game.deletePlayerBySocket(socketIOClient);
             }
         });
         //Réponse pseudo
         server.addEventListener("reponse-pseudo", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest) throws InterruptedException{
-                game.addJoueur(new Joueur(res));
+                game.addJoueur(new Joueur(res, socketIOClient));
                 System.out.println(ConsoleColors.GREEN + res + " a rejoint la partie " +
                         "(" + game.getNumberplayers()+"/2)" + ConsoleColors.RESET
                 );
