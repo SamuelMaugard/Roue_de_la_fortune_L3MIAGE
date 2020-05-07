@@ -7,11 +7,13 @@ import com.corundumstudio.socketio.listener.DisconnectListener;
 
 import com.corundumstudio.socketio.listener.ExceptionListener;
 import core.ConsoleColors;
+import core.roue.Case;
 import io.netty.channel.ChannelHandlerContext;
 import joueur.Joueur;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Serveur {
@@ -85,6 +87,7 @@ public class Serveur {
             	reponseMancheRapide(rep,socketIOClient);
             }
         });
+        
         // choixConsonne
         server.addEventListener("consonne", String.class, new DataListener<String>() {
             @Override
@@ -93,6 +96,14 @@ public class Serveur {
             	getSocketServeur().getBroadcastOperations().sendEvent("consonne",game.getPremierJoueur());
             }
         });
+        // proposition consonne
+        server.addEventListener("consonne_prop", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	consonne(rep);
+            }
+        });
+        
         // choixVoyelle
         server.addEventListener("voyelle", String.class, new DataListener<String>() {
             @Override
@@ -111,6 +122,22 @@ public class Serveur {
         });
     }
     
+    private void consonne(String rep) {
+    	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
+    	System.out.println(nbLettre);
+    	if(nbLettre>0) {
+    		int gain = game.getJoueur(game.getPremierJoueur()).getGainManche()+(nbLettre*game.getGainPotentiel());
+    		game.getJoueur(game.getPremierJoueur()).setGainManche(gain);
+    		String gainJ1 = "Joueur "+game.getJoueurs().get(0)+", gain : "+game.getJoueurs().get(0).getGainManche();
+    		String gainJ2 = "Joueur "+game.getJoueurs().get(1)+", gain : "+game.getJoueurs().get(1).getGainManche();
+    		getSocketServeur().getBroadcastOperations().sendEvent("maj_gain_phrase",gainJ1,gainJ2,game.getPremierJoueur(),game.getPhrase().toString());
+    		game.tourJoueur();
+    	}
+    	else {
+    		game.setPremierJoueur(game.joueurAdverse().getNom());
+    		game.tourJoueur();
+    	}
+    }
     private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
     	String[] repJoueur = rep.split(" ");
         String reponse = "";
@@ -126,13 +153,14 @@ public class Serveur {
             infoClient+=" et a gagné "+game.getJoueur(repJoueur[repJoueur.length-1]).getGainManche()+" de gain";
             server.getBroadcastOperations().sendEvent("fin_manche_rapide",infoClient);
             game.setPremierJoueur(repJoueur[repJoueur.length-1]);
+            
             //Début de la manche longue
             game.mancheLongue();
         }
         else {
         	System.out.println(repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
             server.getBroadcastOperations().sendEvent("maj_manche_rapide", repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
-            //socketIOClient.sendEvent("manche_rapide");
+            socketIOClient.sendEvent("mauvaise_reponse_rapide");
         }
 	}
 

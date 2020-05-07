@@ -4,6 +4,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
+import joueur.Joueur;
+import serveur.GameManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -234,6 +236,13 @@ public class Client {
             	reponseMancheRapide();
             }
         });
+        // mauvaise rep
+        mSocket.on("mauvaise_reponse_rapide", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	reponseMancheRapide();
+            }
+        });
         // maj reponse manche rapide
         mSocket.on("maj_manche_rapide", new Emitter.Listener() {
             @Override
@@ -246,6 +255,8 @@ public class Client {
             @Override
             public void call(Object... objects) {
             	addToContent((String)objects[0]);
+            	addToContent("<br>");
+            	addToContent("Debut de manche longue");
             }
         });
         // choix joueur
@@ -254,6 +265,7 @@ public class Client {
             public void call(Object... objects) {
             	String nom =(String)objects[0];
             	if(nom.equals(pseudo)) {
+            		addToContent((String)objects[1]);
             		addToContent("Choisissez un action à effectuer : ");
             		addToContent("c : proposer une consonne, v proposer une voyelle, r proposer une reponse");
             		choixJoueur();
@@ -263,6 +275,52 @@ public class Client {
             	}
             }
         });
+        // banqueroute
+        mSocket.on("banqueroute", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) { 
+            	addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case banqueroute.");
+            	addToContent("Ces gains lors de cette manchesont remis à 0");
+            	addToContent("Ce n'est plus à lui de jouer");
+            }
+        });
+        // passe
+        mSocket.on("passe", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) { 
+            	addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case passe.");
+            	addToContent("Ce n'est plus à lui de jouer");
+            }
+        });
+        // holdUp
+        mSocket.on("holdUp", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) { 
+            	addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case holdUp.");
+            	addToContent("Il va opouvoir gagner les gains de son adversaire qui sont de "+(String)objects[1]);
+            }
+        });
+        // gain
+        mSocket.on("gain", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) { 
+            	addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case gain.");
+            	addToContent("Il va opouvoir gagner les gains de la case qui sont de "+(String)objects[1]);
+            }
+        });
+        
+        // maj manche longue
+        mSocket.on("maj_gain_phrase", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+            	addToContent("Gain des joueurs");
+            	addToContent((String)objects[0]);
+            	addToContent((String)objects[1]);
+            	addToContent("C'est à "+(String)objects[2]+" de jouer");
+            	addToContent((String)objects[3]);
+            }
+        });
+        
         // proposer consonne
         mSocket.on("consonne", new Emitter.Listener() {
             @Override
@@ -273,7 +331,7 @@ public class Client {
             		consonne();
             	}
             	else {
-            		addToContent((String)objects[0]+" doit choisir une action");
+            		addToContent((String)objects[0]+" propose une consonne");
             	}
             }
         });

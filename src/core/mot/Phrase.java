@@ -52,6 +52,7 @@ public class Phrase {
 		for(int i=0;i<rep.length();i++) {
 			if(rep.charAt(i)==(char)((int)caractere-32) || rep.charAt(i)==caractere) {
 				tab[i]=rep.charAt(i);
+				nbLettre++;
 			} 
 		}
 		aTrouver= String.valueOf(tab);

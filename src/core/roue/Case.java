@@ -15,7 +15,7 @@ public abstract class Case {
 		deuxmille("2000"),
 		banqueroute("banqueroute"),
 		passe("passe"),
-		holdUp("HoldUp");
+		holdUp("holdUp");
 		
 		private String valeur;
 		
@@ -23,7 +23,7 @@ public abstract class Case {
 			this.valeur = valeur;
 		}
 		
-		String getNom() {
+		public String getNom() {
 			return valeur;
 		}
 	}

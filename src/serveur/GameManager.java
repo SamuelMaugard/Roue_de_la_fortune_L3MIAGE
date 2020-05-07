@@ -4,7 +4,11 @@ import com.corundumstudio.socketio.SocketIOClient;
 import core.ConsoleColors;
 import core.TimeOut;
 import core.mot.*;
+import core.roue.Case;
+import core.roue.Roue;
 import joueur.Joueur;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GameManager {
@@ -14,7 +18,9 @@ public class GameManager {
 	private ListePhrase liste;
 	private Serveur server;
 	private String premierJoueur;
+	private Roue roue;
 	private boolean estTrouve;
+	private int gainPotentiel;
 	
 	public GameManager(Serveur serveur) {
 		this.server = serveur;
@@ -23,6 +29,7 @@ public class GameManager {
 		phrase = new Phrase(liste.getPhrase());
 		premierJoueur = "";
 		estTrouve = false;
+		roue = new Roue();
 	}
 	
 	public void addJoueur(Joueur joueur) {
@@ -67,13 +74,53 @@ public class GameManager {
 	public void mancheLongue() {
 		resetPhrase();
 		System.out.println("manche longue : ");
-		// demander au joueur un choix (consonne, voyelle, reponse)
-		server.getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",premierJoueur);
-		choixJoueur();
+		
+		tourJoueur();
 		
 		// si le joueur c'est tromper on passe à l'autre
 	}
 	
+	public void tourJoueur() {
+		Case c = roue.lancerRoue();
+		System.out.println(c);
+		int effet = effetCase(c);
+		System.out.println(effet);
+		if(effet==-1) {
+			tourJoueur();
+		}
+		else {
+			gainPotentiel=effet;
+			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",premierJoueur,phrase.toString());
+			choixJoueur();
+		}
+	}
+
+	private Integer effetCase(Case c) {
+		switch(c.getValeur().name()) {
+			case "banqueroute":
+				server.getSocketServeur().getBroadcastOperations().sendEvent("banqueroute",premierJoueur);
+				getJoueur(premierJoueur).setGainManche(0);
+				premierJoueur = joueurAdverse().getNom();
+				return -1;
+			case "passe":
+				server.getSocketServeur().getBroadcastOperations().sendEvent("passe",premierJoueur);
+				premierJoueur = joueurAdverse().getNom();
+				return -1;
+			case "holdUp":
+				server.getSocketServeur().getBroadcastOperations().sendEvent("holdUp",premierJoueur,joueurAdverse().getGainManche()+"");
+				return joueurAdverse().getGainManche();
+			default:
+				server.getSocketServeur().getBroadcastOperations().sendEvent("gain",premierJoueur,c.getValeur().getNom());
+				return Integer.parseInt(c.getValeur().getNom());
+		}
+	}
+
+	public Joueur joueurAdverse() {
+		if(premierJoueur.equals(joueurs.get(0).getNom()))
+			return joueurs.get(1);
+		return joueurs.get(0);
+	}
+
 	public void choixJoueur() {
 		if(getJoueur(premierJoueur).getChoixAction().equals("")) {
 			new TimeOut(5,this,"ChoixJoueur");
@@ -103,6 +150,14 @@ public class GameManager {
 		return premierJoueur;
 	}
 
+	public Roue getRoue() {
+		return roue;
+	}
+	
+	public int getGainPotentiel() {
+		return gainPotentiel;
+	}
+	
 	public Joueur getJoueur(String string) {
 		if(joueurs.get(0).getNom().equals(string)) {
 			return  joueurs.get(0);
@@ -120,5 +175,9 @@ public class GameManager {
 				System.out.println(ConsoleColors.GREEN + "Déconnexion de " + n + " ("+joueurs.size()+"/2)" + ConsoleColors.RESET);
 			}
 		}
+	}
+	
+	public ArrayList<Joueur> getJoueurs(){
+		return joueurs;
 	}
 }
