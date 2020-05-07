@@ -46,10 +46,10 @@ public class GameManager {
 			System.out.println(phrase.toString());
 			server.getSocketServeur().getBroadcastOperations().sendEvent("maj_manche_rapide",phrase.toString());
 		}
-		System.out.println("dans le while2");
 	}
 
 	private void mancheLongue() {
+		System.out.println("manche longue : ");
 		// TODO a faire manche longue
 	}
 	
@@ -63,5 +63,14 @@ public class GameManager {
 
 	public int getNumberplayers() {
 		return joueurs.size();
+	}
+
+	public Joueur getJoueur(String string) {
+		if(joueurs.get(0).getNom().equals(string)) {
+			return  joueurs.get(0);
+		}
+		else {
+			return joueurs.get(1);
+		}
 	}
 }

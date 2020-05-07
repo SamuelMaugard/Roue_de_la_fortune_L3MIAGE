@@ -132,9 +132,11 @@ public class Client {
         ActionListener reponseListener = new ActionListener(){
             public void actionPerformed(ActionEvent event){
                 String val = textField.getText();
+                val=val.toUpperCase();
                 textField.setText("");
                 addToContent("Réponse envoyé: " + val + "<br>");
-                mSocket.emit("reponse_manche_rapide",   val + " " + pseudo);
+                val+=" "+pseudo;
+                mSocket.emit("reponse_manche_rapide",val);
             }
         };
         btnOK.removeActionListener(currentListener);

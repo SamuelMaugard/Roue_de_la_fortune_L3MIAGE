@@ -82,8 +82,11 @@ public class Serveur {
         reponse = reponse.substring(0,reponse.length()-1);
         if(reponse.equals(game.getPhrase().getPhraseJuste())) {
         	System.out.println(repJoueur[repJoueur.length-1]+" a trouvé la reponse");
-            server.getBroadcastOperations().sendEvent("maj_manche_rapide",repJoueur[repJoueur.length-1]+" a trouvé la réponse");
         	game.setEstTrouve(true);
+        	String infoClient = repJoueur[repJoueur.length-1]+" a trouvé la réponse";
+            server.getBroadcastOperations().sendEvent("maj_manche_rapide",infoClient);
+            game.getJoueur(repJoueur[repJoueur.length-1]).setGainManche(500);
+            // envoyé un message comme quoi le joueur à trouvé la bonne rep et gagne 500 de gain
         }
         else {
         	System.out.println(repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
