@@ -1,8 +1,8 @@
 package serveur;
 
+import core.TimeOut;
 import core.mot.*;
 import joueur.Joueur;
-
 import java.util.ArrayList;
 
 public class GameManager {
@@ -26,29 +26,35 @@ public class GameManager {
 	}
 
 	public void newGame() throws InterruptedException {
-		System.out.println("\n Le bon nombre de personne est présent \n");
+		System.out.println("\nLe bon nombre de personne est présent\n");
 		System.out.println("La partie commence\n");
 		
 		
-			System.out.println("-------- La manche 1 commence-------\n");
+			System.out.println("-------- La manche 1 commence -------\n");
 			mancheRapide();
-			mancheLongue();
 	}
 
-	private void mancheRapide() throws InterruptedException {
+	private void mancheRapide() {
 		System.out.println("manche rapide : ");
 		System.out.println("Vous devez trouver le plus rapidement la phrase suivante :\n");
 		System.out.println(phrase.toString());
 		server.getSocketServeur().getBroadcastOperations().sendEvent("manche_rapide",phrase.toString());
-		while(estTrouve==false) {
-			Thread.sleep(5000);
+		new TimeOut(5, this, "MancheRapide");
+
+	}
+
+	public void updateMancheRapide() {
+		if(estTrouve==false) {
 			phrase.decouvreUneLettre();
 			System.out.println(phrase.toString());
 			server.getSocketServeur().getBroadcastOperations().sendEvent("maj_manche_rapide",phrase.toString());
+			new TimeOut(5, this, "MancheRapide");
+		} else {
+
 		}
 	}
 
-	private void mancheLongue() {
+	public void mancheLongue() {
 		System.out.println("manche longue : ");
 		// TODO a faire manche longue
 	}

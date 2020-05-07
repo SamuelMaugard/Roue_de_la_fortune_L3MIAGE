@@ -10,8 +10,6 @@ import joueur.Joueur;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Serveur {
 
@@ -32,6 +30,7 @@ public class Serveur {
         } catch (InterruptedException e) { e.printStackTrace(); }
         dispIP();
         System.out.println("\nAttente des joueurs ...");
+
     }
 
     public void setUpEventsListeners() {
@@ -87,6 +86,9 @@ public class Serveur {
             server.getBroadcastOperations().sendEvent("maj_manche_rapide",infoClient);
             game.getJoueur(repJoueur[repJoueur.length-1]).setGainManche(500);
             // envoyé un message comme quoi le joueur à trouvé la bonne rep et gagne 500 de gain
+
+            //Début de la manche longue
+            game.mancheLongue();
         }
         else {
         	System.out.println(repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
