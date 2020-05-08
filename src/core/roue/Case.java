@@ -14,9 +14,17 @@ public abstract class Case {
 		millecinqcent("1500"),
 		deuxmille("2000"),
 		banqueroute("banqueroute"),
+		holdUp("holdUp"),
 		passe("passe"),
-		holdUp("holdUp");
-		
+		cinqmille("5000"),
+		septmillecinqcent("7500"),
+		dixmille("10000"),
+		quizemille("15000"),
+		vingtmille("20000"),
+		vingtcinqmille("25000"),
+		cinquantemille("50000"),
+		centmille("100000");
+
 		private String valeur;
 		
 		Valeur(String valeur) {
@@ -36,6 +44,13 @@ public abstract class Case {
 
 	public Valeur getValeur() {
 		return valeur;
+	}
+
+	@Override
+	public String toString() {
+		return "Case{" +
+				"valeur=" + valeur +
+				'}';
 	}
 }
 

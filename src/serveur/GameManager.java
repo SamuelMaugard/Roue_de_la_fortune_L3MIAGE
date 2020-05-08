@@ -19,6 +19,7 @@ public class GameManager {
 	private Serveur server;
 	private String premierJoueur;
 	private Roue roue;
+	private Roue rouefinale;
 	private boolean estTrouve;
 	private int gainPotentiel;
 	private int nbManche;
@@ -30,8 +31,9 @@ public class GameManager {
 		phrase = new Phrase(liste.getPhrase());
 		premierJoueur = "";
 		estTrouve = false;
-		roue = new Roue();
 		nbManche=1;
+		roue = new Roue(true);
+		rouefinale = new Roue(false);
 	}
 	
 	public void addJoueur(Joueur joueur) {

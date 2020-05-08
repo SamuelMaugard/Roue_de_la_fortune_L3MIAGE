@@ -26,6 +26,22 @@ public class CaseGain extends Case{
 				return Valeur.millecinqcent;
 			case 2000:
 				return Valeur.deuxmille;
+			case 5000:
+				return Valeur.cinqmille;
+			case 7500:
+				return Valeur.septmillecinqcent;
+			case 10000:
+				return Valeur.dixmille;
+			case 15000:
+				return Valeur.quizemille;
+			case 20000:
+				return Valeur.vingtmille;
+			case 25000:
+				return Valeur.vingtcinqmille;
+			case 50000:
+				return Valeur.cinquantemille;
+			case 100000:
+				return Valeur.centmille;
 			default :
 				return Valeur.zero;
 		}
