@@ -108,10 +108,25 @@ public class Serveur {
         server.addEventListener("voyelle", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	game.getJoueur(game.getPremierJoueur()).setChoixAction("V");
-            	getSocketServeur().getBroadcastOperations().sendEvent("voyelle",game.getPremierJoueur());
+            	if(game.getJoueur(game.getPremierJoueur()).getGainManche()<200) {
+            		getSocketServeur().getBroadcastOperations().sendEvent("notbuy_voyelle"," ne peut pas acheter de voyelle il doit faire un autre choix",game.getPremierJoueur());
+            		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+            	}
+            	else {
+                	game.getJoueur(game.getPremierJoueur()).setChoixAction("V");
+                	int gainManche = game.getJoueur(game.getPremierJoueur()).getGainManche()-200;
+                	game.getJoueur(game.getPremierJoueur()).setGainManche(gainManche);
+                	getSocketServeur().getBroadcastOperations().sendEvent("voyelle",game.getPremierJoueur());
+            	}
             }
         });
+        // proposition voyelle
+        server.addEventListener("voyelle_prop", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	voyelle(rep);
+            }
+        });        
         // choixReponse
         server.addEventListener("reponse", String.class, new DataListener<String>() {
             @Override
@@ -124,7 +139,6 @@ public class Serveur {
     
     private void consonne(String rep) {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
-    	System.out.println(nbLettre);
     	if(nbLettre>0) {
     		int gain = game.getJoueur(game.getPremierJoueur()).getGainManche()+(nbLettre*game.getGainPotentiel());
     		game.getJoueur(game.getPremierJoueur()).setGainManche(gain);
@@ -138,6 +152,18 @@ public class Serveur {
     		game.tourJoueur();
     	}
     }
+    
+    public void voyelle(String rep) {
+    	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
+    	if(nbLettre>0) {
+    		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+    	}
+    	else {
+    		game.setPremierJoueur(game.joueurAdverse().getNom());
+    		game.tourJoueur();
+    	}
+    }
+    
     private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
     	String[] repJoueur = rep.split(" ");
         String reponse = "";
