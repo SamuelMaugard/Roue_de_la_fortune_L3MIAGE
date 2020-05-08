@@ -52,6 +52,13 @@ public class GameManager {
 	
 	public void finale() {
 		System.out.println("on est en finale");
+		// TODO réinitialiser la phrase
+		// TODO remplacer les lettres r,s,t,l,n et e
+		// TODO fonction pour obtenir le joueur qui a le plus de gain
+		// TODO message annonce la finale avec le nom du joueur
+		// TODO le joueur propose 3 consonnes et une voyelle
+		// TODO demander la reponse au joueur 
+		// si jamais ya besoin d'aide jui la
 	}
 	
 	private void mancheRapide() {
@@ -80,8 +87,6 @@ public class GameManager {
 		System.out.println("manche longue : ");
 		
 		tourJoueur();
-		
-		// si le joueur c'est tromper on passe à l'autre
 	}
 	
 	public void tourJoueur() {
