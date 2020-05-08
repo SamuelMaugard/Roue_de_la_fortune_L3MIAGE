@@ -8,7 +8,6 @@ import java.util.*;
 
 public class ListePhrase {
 
-	// TODO lire fichier pour les phrases
 	private ArrayList<String> phrases;
 	
 	public ListePhrase () {
@@ -37,7 +36,6 @@ public class ListePhrase {
 	}
 	
 	public String getPhrase() {
-		// TODO retourne une phrase au pif
 		Random r = new Random();
 		String rep = phrases.get(r.nextInt(phrases.size()));
 		phrases.remove(rep);
