@@ -23,9 +23,7 @@ public class Serveur {
 
     public Serveur() {
         Configuration config = new Configuration();
-        InetAddress inetAddress = null;
-        try { inetAddress = InetAddress.getLocalHost(); } catch (UnknownHostException e) { e.printStackTrace(); }
-        config.setHostname(inetAddress.getHostAddress());
+        config.setHostname("127.0.0.1");
         config.setExceptionListener(new ExceptionListener() {
             @Override
             public void onEventException(Exception e, List<Object> list, SocketIOClient socketIOClient) {}
@@ -229,9 +227,8 @@ public class Serveur {
         }
         System.out.println("\n--------------------------------------");
         System.out.println("Se connecter:");
-        System.out.println("LOCAL: http://" + inetAddress.getHostAddress() + ":10101/");
-        System.out.println("EXTERNE: voir: https://fra.privateinternetaccess.com/pages/whats-my-ip/");
-
+        System.out.println("LOCAL: http://127.0.0.1:10101/");
+        System.out.println("EXTERNE: http://" + inetAddress.getHostAddress() + ":10101/");
         System.out.println("--------------------------------------");
 
     }
