@@ -126,13 +126,41 @@ public class Serveur {
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
             	voyelle(rep);
             }
-        });        
+        });   
+        
         // choixReponse
         server.addEventListener("reponse", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
             	game.getJoueur(game.getPremierJoueur()).setChoixAction("R");
             	getSocketServeur().getBroadcastOperations().sendEvent("reponse",game.getPremierJoueur());
+            }
+        });
+        // proposition reponse
+        server.addEventListener("reponse_prop", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	if(rep.equals(game.getPhrase().getPhraseJuste())) {
+            		game.getJoueur(game.getPremierJoueur()).setGainTotal(game.getJoueur(game.getPremierJoueur()).getGainManche());
+            		getSocketServeur().getBroadcastOperations().sendEvent("bonne_reponse",game.getPremierJoueur(),game.getJoueur(game.getPremierJoueur()).getGainTotal()+"");
+            		for(Joueur j : game.getJoueurs()) {
+            			j.setGainManche(0);
+            		}
+            		game.incrementNbManche();
+            		if(game.getNbManche()>4) {
+            			game.finale();
+            		}
+            		else {
+            			game.getPhrase().resetPhrase(game.getListe().getPhrase());
+            			game.setEstTrouve(false);
+            			game.manche();
+            		}
+            	}
+            	else {
+            		getSocketServeur().getBroadcastOperations().sendEvent("mauvaise_reponse",game.getPremierJoueur());
+            		game.setPremierJoueur(game.joueurAdverse().getNom());
+            		game.tourJoueur();
+            	}
             }
         });
     }
@@ -142,8 +170,8 @@ public class Serveur {
     	if(nbLettre>0) {
     		int gain = game.getJoueur(game.getPremierJoueur()).getGainManche()+(nbLettre*game.getGainPotentiel());
     		game.getJoueur(game.getPremierJoueur()).setGainManche(gain);
-    		String gainJ1 = "Joueur "+game.getJoueurs().get(0)+", gain : "+game.getJoueurs().get(0).getGainManche();
-    		String gainJ2 = "Joueur "+game.getJoueurs().get(1)+", gain : "+game.getJoueurs().get(1).getGainManche();
+    		String gainJ1 = "Joueur "+game.getJoueurs().get(0).getNom()+", gain : "+game.getJoueurs().get(0).getGainManche();
+    		String gainJ2 = "Joueur "+game.getJoueurs().get(1).getNom()+", gain : "+game.getJoueurs().get(1).getGainManche();
     		getSocketServeur().getBroadcastOperations().sendEvent("maj_gain_phrase",gainJ1,gainJ2,game.getPremierJoueur(),game.getPhrase().toString());
     		game.tourJoueur();
     	}

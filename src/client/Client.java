@@ -251,6 +251,22 @@ public class Client {
 		return false;
 	}
 
+	public void reponse() {
+		ActionListener reponseListener = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(textField.getText().length() > 0) {
+					String val = textField.getText();
+					textField.setText("");
+					val=val.toUpperCase();
+					mSocket.emit("reponse_prop",val);
+				}
+			}
+		};
+		btnOK.removeActionListener(currentListener);
+		currentListener = reponseListener;
+		btnOK.addActionListener(reponseListener);
+	}
+	
 	public void setUpEventsListeners() {
 
 		//Custom listeners
@@ -331,7 +347,7 @@ public class Client {
 			@Override
 			public void call(Object... objects) { 
 				addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case holdUp.");
-				addToContent("Il va opouvoir gagner les gains de son adversaire qui sont de "+(String)objects[1]);
+				addToContent("Il va pouvoir gagner les gains de son adversaire qui sont de "+(String)objects[1]);
 			}
 		});
 		// gain
@@ -339,7 +355,7 @@ public class Client {
 			@Override
 			public void call(Object... objects) { 
 				addToContent((String)objects[0]+" a fait tourné la roue et obtenu une case gain.");
-				addToContent("Il va opouvoir gagner les gains de la case qui sont de "+(String)objects[1]);
+				addToContent("Il va pouvoir gagner les gains de la case qui sont de "+(String)objects[1]);
 			}
 		});
 
@@ -351,7 +367,6 @@ public class Client {
 				addToContent((String)objects[0]);
 				addToContent((String)objects[1]);
 				addToContent("C'est à "+(String)objects[2]+" de jouer");
-				addToContent((String)objects[3]);
 			}
 		});
 
@@ -399,7 +414,36 @@ public class Client {
 				}
 			}
 		});
-
+		
+		// proposer reponse
+		mSocket.on("reponse", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				String nom =(String)objects[0];
+				if(nom.equals(pseudo)) {
+					addToContent("Proposez une reponse");
+					reponse();
+				}
+				else {
+					addToContent((String)objects[0]+" propose une reponse");
+				}
+			}
+		});
+		// bonne reponse
+		mSocket.on("bonne_reponse", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				addToContent((String)objects[0]+" a trouvé la bonne réponse et gagne "+(String)objects[1]+" de gain"); 
+			}
+		});
+		// mauvaise reponse
+		mSocket.on("mauvaise_reponse", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				addToContent((String)objects[0]+" a proposé une mauvaise réponse"); 
+			}
+		});
+		
 		//connection listeners
 		mSocket.on("connect", new Emitter.Listener() {
 			@Override

@@ -21,6 +21,7 @@ public class GameManager {
 	private Roue roue;
 	private boolean estTrouve;
 	private int gainPotentiel;
+	private int nbManche;
 	
 	public GameManager(Serveur serveur) {
 		this.server = serveur;
@@ -30,6 +31,7 @@ public class GameManager {
 		premierJoueur = "";
 		estTrouve = false;
 		roue = new Roue();
+		nbManche=1;
 	}
 	
 	public void addJoueur(Joueur joueur) {
@@ -40,7 +42,6 @@ public class GameManager {
 		System.out.println("\nLe bon nombre de personne est présent\n");
 		System.out.println("La partie commence\n");
 		manche();
-		finale();
 	}
 
 	public void manche() {
@@ -48,14 +49,15 @@ public class GameManager {
 	}
 	
 	public void finale() {
-		
+		System.out.println("on est en finale");
 	}
 	
 	private void mancheRapide() {
+		System.out.println("--------- Manche "+nbManche+" --------");
 		System.out.println("manche rapide : ");
 		System.out.println("Vous devez trouver le plus rapidement la phrase suivante :\n");
 		System.out.println(phrase.toString());
-		server.getSocketServeur().getBroadcastOperations().sendEvent("manche_rapide",phrase.toString());
+		server.getSocketServeur().getBroadcastOperations().sendEvent("manche_rapide",phrase.toString(),nbManche+"");
 		new TimeOut(2, this, "MancheRapide");
 
 	}
@@ -82,9 +84,7 @@ public class GameManager {
 	
 	public void tourJoueur() {
 		Case c = roue.lancerRoue();
-		System.out.println(c);
 		int effet = effetCase(c);
-		System.out.println(effet);
 		if(effet==-1) {
 			tourJoueur();
 		}
@@ -158,6 +158,10 @@ public class GameManager {
 		return gainPotentiel;
 	}
 	
+	public ListePhrase getListe() {
+		return liste;
+	}
+	
 	public Joueur getJoueur(String string) {
 		if(joueurs.get(0).getNom().equals(string)) {
 			return  joueurs.get(0);
@@ -165,6 +169,14 @@ public class GameManager {
 		else {
 			return joueurs.get(1);
 		}
+	}
+	
+	public int getNbManche() {
+		return nbManche;
+	}
+	
+	public void incrementNbManche() {
+		nbManche++;
 	}
 
 	public void deletePlayerBySocket(SocketIOClient so) {
