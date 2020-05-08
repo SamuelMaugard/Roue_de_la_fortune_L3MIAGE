@@ -13,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 public class Client {
 
@@ -89,9 +91,11 @@ public class Client {
 	}
 
 	public void askServer() {
+		InetAddress inetAddress = null;
+		try { inetAddress = InetAddress.getLocalHost(); } catch (UnknownHostException e) { e.printStackTrace(); }
+		textField.setText("http://"+inetAddress.getHostAddress()+":10101/");
 		addToContent("Entrez l'adresse du serveur host.");
-		addToContent("(http://127.0.0.1:10101/ en local.)");
-		textField.setText("http://127.0.0.1:10101/");
+		addToContent("(http://"+inetAddress.getHostAddress()+":10101/ en local.)");
 		ActionListener servLog = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				if(textField.getText().length() > 0) {
