@@ -304,6 +304,9 @@ public class Client {
 		mSocket.on("fin_manche_rapide", new Emitter.Listener() {
 			@Override
 			public void call(Object... objects) {
+				if(!((String)objects[1]).equals(pseudo)) {
+					btnOK.removeActionListener(currentListener);
+				}
 				addToContent((String)objects[0]);
 				addToContent("<br>");
 				addToContent("Debut de manche longue");
@@ -433,7 +436,7 @@ public class Client {
 		mSocket.on("bonne_reponse", new Emitter.Listener() {
 			@Override
 			public void call(Object... objects) { 
-				addToContent((String)objects[0]+" a trouvé la bonne réponse et gagne "+(String)objects[1]+" de gain"); 
+				addToContent((String)objects[0]+" a trouvé la bonne réponse et gagne "+(String)objects[1]+" de gain");
 			}
 		});
 		// mauvaise reponse
@@ -449,7 +452,8 @@ public class Client {
 			@Override
 			public void call(Object... objects) { 
 				if(((String)objects[0]).equals(pseudo)) {
-					addToContent((String)objects[0]+" ce n'est pas a vous de jouez");
+					btnOK.removeActionListener(currentListener);
+					addToContent((String)objects[0]+" ce n'est plus a vous de jouez");
 				}
 			}
 		});

@@ -111,7 +111,7 @@ public class Serveur {
         server.addEventListener("consonne_prop", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	consonne(rep);
+            	consonne(rep,socketIOClient);
             }
         });
         
@@ -140,7 +140,7 @@ public class Serveur {
         server.addEventListener("voyelle_prop", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	voyelle(rep);
+            	voyelle(rep,socketIOClient);
             }
         });   
         
@@ -179,6 +179,7 @@ public class Serveur {
             	}
             	else {
             		getSocketServeur().getBroadcastOperations().sendEvent("mauvaise_reponse",game.getPremierJoueur());
+            		socketIOClient.sendEvent("pas_ton_tour",game.getPremierJoueur());
             		game.setPremierJoueur(game.joueurAdverse().getNom());
             		game.tourJoueur();
             	}
@@ -186,7 +187,7 @@ public class Serveur {
         });
     }
     
-    private void consonne(String rep) {
+    private void consonne(String rep, SocketIOClient socketIOClient) {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
     	if(nbLettre>0) {
     		int gain = game.getJoueur(game.getPremierJoueur()).getGainManche()+(nbLettre*game.getGainPotentiel());
@@ -197,17 +198,19 @@ public class Serveur {
     		game.tourJoueur();
     	}
     	else {
+    		socketIOClient.sendEvent("pas_ton_tour",game.getPremierJoueur());
     		game.setPremierJoueur(game.joueurAdverse().getNom());
     		game.tourJoueur();
     	}
     }
     
-    public void voyelle(String rep) {
+    public void voyelle(String rep, SocketIOClient socketIOClient) {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
     	if(nbLettre>0) {
     		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
     	}
     	else {
+        	socketIOClient.sendEvent("pas_ton_tour",game.getPremierJoueur());
     		game.setPremierJoueur(game.joueurAdverse().getNom());
     		game.tourJoueur();
     	}
@@ -226,7 +229,7 @@ public class Serveur {
         	String infoClient = repJoueur[repJoueur.length-1]+" a trouvé la réponse";
             game.getJoueur(repJoueur[repJoueur.length-1]).setGainManche(500);
             infoClient+=" et a gagné "+game.getJoueur(repJoueur[repJoueur.length-1]).getGainManche()+" de gain";
-            server.getBroadcastOperations().sendEvent("fin_manche_rapide",infoClient);
+            server.getBroadcastOperations().sendEvent("fin_manche_rapide",infoClient,repJoueur[repJoueur.length-1]);
             game.setPremierJoueur(repJoueur[repJoueur.length-1]);
             
             //Début de la manche longue
