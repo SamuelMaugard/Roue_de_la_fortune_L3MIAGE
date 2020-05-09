@@ -166,13 +166,13 @@ public class Client {
 					val=val.toUpperCase();
 					switch(val) {
 					case "C":
-						mSocket.emit("consonne");
+						mSocket.emit("consonne",pseudo);
 						break;
 					case "V":
-						mSocket.emit("voyelle");
+						mSocket.emit("voyelle",pseudo);
 						break;
 					case "R":
-						mSocket.emit("reponse");
+						mSocket.emit("reponse",pseudo);
 					default:
 						addToContent("choix erroné veuillez recommencer");
 						choixJoueur();
@@ -441,6 +441,16 @@ public class Client {
 			@Override
 			public void call(Object... objects) { 
 				addToContent((String)objects[0]+" a proposé une mauvaise réponse"); 
+			}
+		});
+		
+		// pas ton tour
+		mSocket.on("pas_ton_tour", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				if(((String)objects[0]).equals(pseudo)) {
+					addToContent((String)objects[0]+" ce n'est pas a vous de jouez");
+				}
 			}
 		});
 		

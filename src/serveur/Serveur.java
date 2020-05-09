@@ -84,7 +84,12 @@ public class Serveur {
         server.addEventListener("reponse_manche_rapide", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	reponseMancheRapide(rep,socketIOClient);
+            	if(checkPseudo(rep.split(" ")[rep.split(" ").length-1])) {
+            		socketIOClient.sendEvent("pas_ton_tour",rep.split(" ")[rep.split(" ").length-1]);
+            	}
+            	else {
+                	reponseMancheRapide(rep,socketIOClient);
+            	}
             }
         });
         
@@ -92,8 +97,14 @@ public class Serveur {
         server.addEventListener("consonne", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	game.getJoueur(game.getPremierJoueur()).setChoixAction("C");
-            	getSocketServeur().getBroadcastOperations().sendEvent("consonne",game.getPremierJoueur());
+            	if(!checkPseudo(rep)) {
+            		System.out.println(rep);
+                	game.getJoueur(game.getPremierJoueur()).setChoixAction("C");
+                	getSocketServeur().getBroadcastOperations().sendEvent("consonne",game.getPremierJoueur());
+            	}
+            	else {
+            		socketIOClient.sendEvent("pas_ton_tour",rep);
+            	}
             }
         });
         // proposition consonne
@@ -107,16 +118,21 @@ public class Serveur {
         // choixVoyelle
         server.addEventListener("voyelle", String.class, new DataListener<String>() {
             @Override
-            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	if(game.getJoueur(game.getPremierJoueur()).getGainManche()<200) {
-            		getSocketServeur().getBroadcastOperations().sendEvent("notbuy_voyelle"," ne peut pas acheter de voyelle il doit faire un autre choix",game.getPremierJoueur());
-            		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest) {
+            	if(!checkPseudo(rep)) {
+            		if(game.getJoueur(game.getPremierJoueur()).getGainManche()<200) {
+                		getSocketServeur().getBroadcastOperations().sendEvent("notbuy_voyelle"," ne peut pas acheter de voyelle il doit faire un autre choix",game.getPremierJoueur());
+                		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+                	}
+                	else {
+                    	game.getJoueur(game.getPremierJoueur()).setChoixAction("V");
+                    	int gainManche = game.getJoueur(game.getPremierJoueur()).getGainManche()-200;
+                    	game.getJoueur(game.getPremierJoueur()).setGainManche(gainManche);
+                    	getSocketServeur().getBroadcastOperations().sendEvent("voyelle",game.getPremierJoueur());
+                	}
             	}
             	else {
-                	game.getJoueur(game.getPremierJoueur()).setChoixAction("V");
-                	int gainManche = game.getJoueur(game.getPremierJoueur()).getGainManche()-200;
-                	game.getJoueur(game.getPremierJoueur()).setGainManche(gainManche);
-                	getSocketServeur().getBroadcastOperations().sendEvent("voyelle",game.getPremierJoueur());
+            		socketIOClient.sendEvent("pas_ton_tour",rep);
             	}
             }
         });
@@ -132,8 +148,13 @@ public class Serveur {
         server.addEventListener("reponse", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	game.getJoueur(game.getPremierJoueur()).setChoixAction("R");
-            	getSocketServeur().getBroadcastOperations().sendEvent("reponse",game.getPremierJoueur());
+            	if(!checkPseudo(rep)) {
+                	game.getJoueur(game.getPremierJoueur()).setChoixAction("R");
+                	getSocketServeur().getBroadcastOperations().sendEvent("reponse",game.getPremierJoueur());
+            	}
+            	else {
+            		socketIOClient.sendEvent("pas_ton_tour",rep);
+            	}
             }
         });
         // proposition reponse
@@ -216,6 +237,14 @@ public class Serveur {
             server.getBroadcastOperations().sendEvent("maj_manche_rapide", repJoueur[repJoueur.length-1]+" a proposé une mauvaise reponse veuillez ressayer");
             socketIOClient.sendEvent("mauvaise_reponse_rapide");
         }
+	}
+    
+
+
+	private boolean checkPseudo(String rep) {
+		System.out.println(rep);
+		System.out.println(game.getEstTrouve() && rep.equals(game.getPremierJoueur()));
+		return (game.getEstTrouve() && !rep.equals(game.getPremierJoueur()));
 	}
 
     public void dispIP() {

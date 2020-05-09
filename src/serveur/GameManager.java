@@ -169,6 +169,10 @@ public class GameManager {
 		return liste;
 	}
 	
+	public boolean getEstTrouve() {
+		return estTrouve;
+	}
+	
 	public Joueur getJoueur(String string) {
 		if(joueurs.get(0).getNom().equals(string)) {
 			return  joueurs.get(0);
