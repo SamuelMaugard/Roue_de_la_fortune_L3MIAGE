@@ -132,6 +132,34 @@ public class Phrase {
 		}
 		return true;
 	}
+
+	/**
+	 * @return true si il reste des voyelle
+	 */
+	public boolean resteVoyelle(){
+		//TODO se servir de cette methode pour le comportement du jeu
+		int voyelleRep = 0 ;
+		int voyelleATrouver = 0;
+
+		//nombre de voyelle dans la reponsse
+		for(int i = 0; i < rep.length(); i++) {
+			char c = rep.charAt(i);
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'Y') {
+				voyelleRep++;
+			}
+		}
+		//nombre de voyelle dans la reponsse
+		for(int i = 0; i < aTrouver.length(); i++) {
+			char c = aTrouver.charAt(i);
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'Y') {
+				voyelleATrouver++;
+			}
+		}
+		if (voyelleRep - voyelleATrouver == 0){
+			return false;
+		}
+		return true;
+	}
 	
 	public String toString() {
 		String s = "";
