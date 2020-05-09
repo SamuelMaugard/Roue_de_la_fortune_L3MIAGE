@@ -5,9 +5,10 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
 import joueur.Joueur;
-import serveur.GameManager;
+import server.GameManager;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -454,6 +455,22 @@ public class Client {
 				if(((String)objects[0]).equals(pseudo)) {
 					btnOK.removeActionListener(currentListener);
 					addToContent((String)objects[0]+" ce n'est plus a vous de jouez");
+				}
+			}
+		});
+		
+		//finale
+		mSocket.on("finale", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				String phrase = (String) objects[0];
+				String gagnant = (String) objects[1];
+				if(gagnant.equals(pseudo)) {
+					//TODO afficher la phrase de la finale 
+					//TODO appeller une méthode pour proposer 3 consonnes et 1 voyelle
+				}
+				else {
+					//TODO affichage du nom du gagnant 
 				}
 			}
 		});

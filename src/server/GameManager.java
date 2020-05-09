@@ -1,15 +1,15 @@
-package serveur;
+package server;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import core.ConsoleColors;
-import core.TimeOut;
+
 import core.mot.*;
+import core.roue.*;
 import core.roue.Case;
 import core.roue.Roue;
 import joueur.Joueur;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import core.TimeOut;
+import core.ConsoleColors;
 
 public class GameManager {
 
@@ -52,13 +52,31 @@ public class GameManager {
 	
 	public void finale() {
 		System.out.println("on est en finale");
-		// TODO réinitialiser la phrase
-		// TODO remplacer les lettres r,s,t,l,n et e
-		// TODO fonction pour obtenir le joueur qui a le plus de gain
+		gainPotentiel = Integer.parseInt(rouefinale.lancerRoue().getValeur().getNom());
+		resetPhrase();
+		lettresFinale();
+		System.out.println(gagnant()+" va en finale");
 		// TODO message annonce la finale avec le nom du joueur
+		server.getSocketServeur().getBroadcastOperations().sendEvent("finale",phrase.toString(),gagnant()); 
 		// TODO le joueur propose 3 consonnes et une voyelle
-		// TODO demander la reponse au joueur 
+		// TODO demander la reponse au joueur (temps limit�)
 		// si jamais ya besoin d'aide jui la
+	}
+	
+	public void lettresFinale() {
+		phrase.remplacerLettre('r');
+		phrase.remplacerLettre('s');
+		phrase.remplacerLettre('t');
+		phrase.remplacerLettre('l');
+		phrase.remplacerLettre('n');
+		phrase.remplacerLettre('e');
+	}
+	
+	public String gagnant() {
+		if(joueurs.get(0).getGainTotal() > joueurs.get(1).getGainTotal()) {
+			return joueurs.get(0).getNom();
+		}
+		return joueurs.get(1).getNom();
 	}
 	
 	private void mancheRapide() {

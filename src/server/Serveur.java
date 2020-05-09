@@ -1,4 +1,4 @@
-package serveur;
+package server;
 
 import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.ConnectListener;

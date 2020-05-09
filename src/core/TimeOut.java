@@ -1,9 +1,9 @@
 package core;
 
-import serveur.GameManager;
-
 import java.util.Timer;
 import java.util.TimerTask;
+
+import server.GameManager;
 
 public class TimeOut {
     Timer timer;
