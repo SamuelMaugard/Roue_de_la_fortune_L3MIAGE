@@ -99,6 +99,39 @@ public class Phrase {
 			aTrouver= String.valueOf(tab);
 		}
 	}
+
+	/**
+	 * @return true si il reste des consonnes
+	 */
+	public boolean resteConsones(){
+		//TODO se servir de cette methode pour le comportement du jeu
+		int consonneRep = 0 ;
+		int consonneATrouver = 0;
+
+		//nombre de consonnes dans la reponsse
+		for(int i = 0; i < rep.length(); i++) {
+			char c = rep.charAt(i);
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'Y') {
+			}
+			else if((c >= 'A' && c <= 'Z')) {
+				consonneRep++;
+			}
+		}
+		//nombre de consonnes dans la reponsse
+		for(int i = 0; i < aTrouver.length(); i++) {
+			char c = aTrouver.charAt(i);
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U' || c == 'Y') {
+			}
+			else if((c >= 'A' && c <= 'Z')) {
+				consonneATrouver++;
+			}
+		}
+
+		if (consonneRep - consonneATrouver == 0){
+			return false;
+		}
+		return true;
+	}
 	
 	public String toString() {
 		String s = "";
