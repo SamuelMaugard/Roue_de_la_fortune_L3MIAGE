@@ -185,6 +185,14 @@ public class Serveur {
             	}
             }
         });
+        
+        // proposition finale
+        server.addEventListener("proposition_finale", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	lettresFinales(rep,socketIOClient);
+            }
+        });   
     }
     
     private void consonne(String rep, SocketIOClient socketIOClient) {
@@ -215,6 +223,11 @@ public class Serveur {
     		game.tourJoueur();
     	}
     }
+    
+    private void lettresFinales(String rep, SocketIOClient socketIOClient) {
+		//TODO remplacer les lettres proposées dans la phrase 
+    	//TODO renvoyer un message au client avec la socket pour demander une proposition de réponse
+	}
     
     private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
     	String[] repJoueur = rep.split(" ");

@@ -56,7 +56,6 @@ public class GameManager {
 		resetPhrase();
 		lettresFinale();
 		System.out.println(gagnant()+" va en finale");
-		// TODO message annonce la finale avec le nom du joueur
 		server.getSocketServeur().getBroadcastOperations().sendEvent("finale",phrase.toString(),gagnant()); 
 		// TODO le joueur propose 3 consonnes et une voyelle
 		// TODO demander la reponse au joueur (temps limit�)

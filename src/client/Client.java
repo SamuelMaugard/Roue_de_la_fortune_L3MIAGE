@@ -466,11 +466,12 @@ public class Client {
 				String phrase = (String) objects[0];
 				String gagnant = (String) objects[1];
 				if(gagnant.equals(pseudo)) {
-					//TODO afficher la phrase de la finale 
-					//TODO appeller une méthode pour proposer 3 consonnes et 1 voyelle
+					addToContent(phrase); 
+					addToContent("Proposer 3 consonnes et 1 voyelle de cette façon: b c f a (voyelle en dernier)");
+					propositionFinale();
 				}
 				else {
-					//TODO affichage du nom du gagnant 
+					addToContent(gagnant+ " est en finale"); 
 				}
 			}
 		});
@@ -488,6 +489,30 @@ public class Client {
 			@Override
 			public void call(Object... objects) { addToContent("Déconnexion"); }
 		});
+	}
+	
+	public void propositionFinale() {
+		ActionListener propositionFinaleListener = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(textField.getText().length() > 0) {
+					String[] tab = textField.getText().split(" ");
+					for(int i=0; i<tab.length; i++) {
+						if(i<3 && !isConsonne(tab[i])) {
+							addToContent("Veuillez faire une proposition correcte");
+							propositionFinale();
+						}
+						else if(i==3 && !isVoyelle(tab[i])) {
+							addToContent("Veuillez faire une proposition correcte");
+							propositionFinale();
+						}
+					}
+					mSocket.emit("propostition_finale", textField.getText());
+				}
+			}
+		};
+		btnOK.removeActionListener(currentListener);
+		currentListener = propositionFinaleListener;
+		btnOK.addActionListener(propositionFinaleListener);
 	}
 
 	public static void main(String[] args) {
