@@ -49,6 +49,7 @@ public class Client {
 		//Contents
 		JPanel contentPanel = new JPanel();
 		scrPane = new JScrollPane(contentPanel);
+		scrPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrPane.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener() {
 			public void adjustmentValueChanged(AdjustmentEvent e) {
 				e.getAdjustable().setValue(e.getAdjustable().getMaximum());
