@@ -297,7 +297,6 @@ public class Serveur {
     		System.out.println(tab[i]);
     		game.getPhrase().remplacerLettre(tab[i].charAt(0));
     	}
-    	System.out.println("la fonction est finie");
 	}
 
 	private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
