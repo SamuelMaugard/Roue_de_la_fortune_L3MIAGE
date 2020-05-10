@@ -153,7 +153,6 @@ public class Client {
 					textField.setText("");
 					addToContent("Réponse envoyé: " + val);
 					val+="\t"+pseudo;
-					addToContent(val);
 					mSocket.emit("reponse_manche_rapide",val);
 				}
 
