@@ -29,7 +29,7 @@ public class Client {
 		//Window params
 		JFrame fenetre = new JFrame();
 		fenetre.setTitle("Roue de la fortune");
-		fenetre.setSize(new Dimension(500,500));
+		fenetre.setSize(new Dimension(600,500));
 		fenetre.setResizable(false);
 
 		//Main Panel
