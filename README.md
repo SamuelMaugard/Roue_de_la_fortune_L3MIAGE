@@ -26,4 +26,4 @@ Nous avons fait en sorte que lorsque le joueur aura proposé toutes les consonne
 Lorsque les 4 premières manches sont terminées, le joueur ayant le plus de gain (gagnés lors des manches précédentes) pourra participer à la manche finale (le perdant pour regarder son déroulement mais de pourra pas jouer). Une deuxième roue est alors lancée avec des gains plus importants.  
 La phrase affichée aura les lettres r, s, t, l, n et e d’affichées et pourra proposer 3 consonnes et 1 voyelle. Une fois affichée, il aura alors 30sec pour trouver le bon mot. Si le joueur trouve le bon mot, il gagnera les gains obtenus lors de toutes les manches et sinon il ne gagnera que les gains gagnés lors des 4 premières manches.  
 
-Pour plus d'informations, voire dans le document technique.
+Pour plus d'informations, voir dans le document technique.
