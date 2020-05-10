@@ -195,7 +195,7 @@ public class Client {
 		currentListener = choixListener;
 		btnOK.addActionListener(choixListener);
 	}
-	
+
 	public void reponseMancheLongue() {
 		ActionListener reponseListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
@@ -633,6 +633,10 @@ public class Client {
 				addToContent("il repart donc avec les gains qu'il a eu pendant les autres manches");
 				addToContent("Gains de "+nom+" : "+gain);
 				addToContent("Partie Terminée");
+				addToContent("Voulez vous reocommencez une partie ?");
+				addToContent("o : oui");
+				addToContent("n : non");
+				recommencez();
 			}
 		});
 
@@ -705,6 +709,29 @@ public class Client {
 		btnOK.removeActionListener(currentListener);
 		currentListener = propositionFinaleListener;
 		btnOK.addActionListener(propositionFinaleListener);
+	}
+
+	public void recommencez() {
+		ActionListener recommencezListener = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(textField.getText().length() > 0) {
+					String val = textField.getText();
+					textField.setText("");
+					val=val.toUpperCase();
+					switch(val) {
+					case "O":
+						mSocket.emit("oui");
+						break;
+					case "V":
+						mSocket.emit("non");
+						break;
+					}
+				}
+			}
+		};
+		btnOK.removeActionListener(currentListener);
+		currentListener = recommencezListener;
+		btnOK.addActionListener(recommencezListener);
 	}
 
 	public static void main(String[] args) {

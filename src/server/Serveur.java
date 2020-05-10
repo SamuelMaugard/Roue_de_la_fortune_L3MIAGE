@@ -222,6 +222,23 @@ public class Serveur {
             	}
             }
         });
+        // non pas de partie recommencez
+        server.addEventListener("non", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	for(SocketIOClient s : server.getAllClients()) {
+            		s.disconnect();
+            	}
+            }
+        });
+        // oui partie 
+        server.addEventListener("oui", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest) throws InterruptedException{
+            	game.resetGame();
+            	game.newGame();
+            }
+        });
     }
     
     private void consonne(String rep, SocketIOClient socketIOClient) {

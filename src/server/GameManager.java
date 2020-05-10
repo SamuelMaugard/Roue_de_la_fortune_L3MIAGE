@@ -257,4 +257,18 @@ public class GameManager {
 	public void stopTimerFinale() {
 		timer.getTimer().cancel();
 	}
+	
+	public void resetGame() {
+		if(joueurs.size()!=0) {
+			for(Joueur j : joueurs) {
+				j.setGainManche(0);
+				j.setGainTotal(0);
+			}
+		}
+		gainPotentiel=0;
+		nbManche=1;
+		estTrouve=false;
+		premierJoueur="";
+		liste = new ListePhrase();
+	}
 }
