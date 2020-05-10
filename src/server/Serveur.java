@@ -96,8 +96,8 @@ public class Serveur {
         server.addEventListener("reponse_manche_rapide", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	if(checkPseudo(rep.split("\t")[rep.split(" ").length-1])) {
-            		socketIOClient.sendEvent("pas_ton_tour",rep.split(" ")[rep.split(" ").length-1]);
+            	if(checkPseudo(rep.split("\t")[rep.split("\t").length-1])) {
+            		socketIOClient.sendEvent("pas_ton_tour",rep.split("\t")[rep.split("\t").length-1]);
             	}
             	else {
                 	reponseMancheRapide(rep,socketIOClient);
