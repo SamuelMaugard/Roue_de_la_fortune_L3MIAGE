@@ -331,16 +331,9 @@ public class Serveur {
 	}
 
     public void dispIP() {
-        InetAddress inetAddress = null;
-        try {
-            inetAddress = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
         System.out.println("\n--------------------------------------");
         System.out.println("Se connecter:");
-        System.out.println("LOCAL: http://127.0.0.1:10101/");
-        System.out.println("EXTERNE: http://" + inetAddress.getHostAddress() + ":10101/");
+        System.out.println("LOCAL: 127.0.0.1");
         System.out.println("--------------------------------------");
 
     }
