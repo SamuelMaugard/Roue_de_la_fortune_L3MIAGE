@@ -7,6 +7,7 @@ import com.corundumstudio.socketio.listener.DisconnectListener;
 
 import com.corundumstudio.socketio.listener.ExceptionListener;
 import core.ConsoleColors;
+import core.TimeOut;
 import core.roue.Case;
 import io.netty.channel.ChannelHandlerContext;
 import joueur.Joueur;
@@ -15,6 +16,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class Serveur {
 
@@ -199,9 +201,10 @@ public class Serveur {
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
             	System.out.println(rep);
             	if(rep.equals(game.getPhrase().getPhraseJuste())) {
+            		game.stopTimerFinale();
             		int gainJoueur = game.getJoueur(game.gagnant()).getGainTotal();
-            		game.getJoueur(game.gagnant()).setGainManche(gainJoueur+game.getGainPotentiel());
-            		gainJoueur = game.getJoueur(game.gagnant()).getGainTotal();
+            		gainJoueur += game.getGainPotentiel();
+            		game.getJoueur(game.gagnant()).setGainTotal(gainJoueur);
             		getSocketServeur().getBroadcastOperations().sendEvent("bonne_rep_finale",game.gagnant(),gainJoueur+"");
             	}
             	else {
@@ -213,6 +216,7 @@ public class Serveur {
     
     private void consonne(String rep, SocketIOClient socketIOClient) {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
+    	getSocketServeur().getBroadcastOperations().sendEvent("lettre_prop",rep,game.getPremierJoueur());
     	if(nbLettre>0) {
     		int gain = game.getJoueur(game.getPremierJoueur()).getGainManche()+(nbLettre*game.getGainPotentiel());
     		game.getJoueur(game.getPremierJoueur()).setGainManche(gain);
@@ -230,6 +234,7 @@ public class Serveur {
     
     public void voyelle(String rep, SocketIOClient socketIOClient) {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
+    	getSocketServeur().getBroadcastOperations().sendEvent("lettre_prop",rep,game.getPremierJoueur());
     	if(nbLettre>0) {
     		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
     	}
@@ -241,9 +246,8 @@ public class Serveur {
     }
     
     private void lettresFinales(String rep, SocketIOClient socketIOClient) {
-    	System.out.println(rep);
-		remplacerLettres(rep); 
-		System.out.println("le message va s'envoyer");
+		remplacerLettres(rep);
+		game.setTimerFinale();
     	socketIOClient.sendEvent("reponse_finale",game.getPhrase().toString());
 	}
     

@@ -24,10 +24,19 @@ public class TimeOut {
             switch (function) {
                 case "MancheRapide":
                     gameManager.updateMancheRapide();
+                    break;
                 case "ChoixJoueur":
                 	gameManager.choixJoueur();
+                	break;
+                case "Finale":
+                	gameManager.finDeFinale();
+                	break;
             }
             timer.cancel();
         }
+    }
+    
+    public Timer getTimer() {
+    	return timer;
     }
 }

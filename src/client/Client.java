@@ -327,6 +327,7 @@ public class Client {
 					choixJoueur();
 				}
 				else {
+					addToContent((String)objects[1]);
 					addToContent((String)objects[0]+" doit choisir une action");
 				}
 			}
@@ -391,6 +392,14 @@ public class Client {
 				else {
 					addToContent((String)objects[0]+" propose une consonne");
 				}
+			}
+		});
+		// lettre prop
+		mSocket.on("lettre_prop", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				addToContent((String)objects[1]+" a proposé la lettre : "+(String)objects[0]);
+				
 			}
 		});
 		
@@ -474,7 +483,10 @@ public class Client {
 					addToContent("<br>");
 					addToContent("------- Manche Finale -------");
 					addToContent(phrase); 
-					addToContent("Proposer 3 consonnes et 1 voyelle de cette façon: b c f a (voyelle en dernier)");
+					addToContent("Nous avons ajouté les lettres les plus utilisés de l'alphabet qui sont :");
+					addToContent("r, s, t, l, n et e");
+					addToContent("Proposer 3 consonnes et 1 voyelle de cette façon: b c f a");
+					addToContent("(voyelle en dernier)");
 					propositionLettreFinale();
 				}
 				else {
@@ -488,7 +500,7 @@ public class Client {
 			public void call(Object... objects) { 
 				String phrase = (String) objects[0];
 					addToContent(phrase);
-					addToContent("Veuillez porposez des réponses pendant 30s");
+					addToContent("Vous avez 30s pour trouver la bonne réponse");
 					propositionFinale();
 			}
 		});
@@ -508,6 +520,18 @@ public class Client {
 				String nom = (String) objects[0];
 				String gain = (String) objects[1];
 				addToContent(nom+" a gagné "+gain+" de gains");
+				addToContent("Partie Terminée");
+			}
+		});
+		// fin finale
+		mSocket.on("fin_finale", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				String nom = (String) objects[0];
+				String gain = (String) objects[1];
+				addToContent(nom+" n'a pas reussi a trouver la réponse.");
+				addToContent("il repart donc avec les gains qu'il a eu pendant les autres manches");
+				addToContent("Gains de "+nom+" : "+gain);
 				addToContent("Partie Terminée");
 			}
 		});

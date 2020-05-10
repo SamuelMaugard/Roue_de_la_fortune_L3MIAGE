@@ -23,6 +23,7 @@ public class GameManager {
 	private boolean estTrouve;
 	private int gainPotentiel;
 	private int nbManche;
+    public TimeOut timer;
 	
 	public GameManager(Serveur serveur) {
 		this.server = serveur;
@@ -53,6 +54,7 @@ public class GameManager {
 	public void finale() {
 		System.out.println("on est en finale");
 		gainPotentiel = Integer.parseInt(rouefinale.lancerRoue().getValeur().getNom());
+		System.out.println(gainPotentiel);
 		resetPhrase();
 		lettresFinale();
 		System.out.println(gagnant()+" va en finale");
@@ -82,7 +84,7 @@ public class GameManager {
 		System.out.println("Vous devez trouver le plus rapidement la phrase suivante :\n");
 		System.out.println(phrase.toString());
 		server.getSocketServeur().getBroadcastOperations().sendEvent("manche_rapide",phrase.toString(),nbManche+"");
-		new TimeOut(2, this, "MancheRapide");
+		timer = new TimeOut(2, this, "MancheRapide");
 
 	}
 
@@ -93,11 +95,12 @@ public class GameManager {
 
 			System.out.println(phrase.toString());
 			server.getSocketServeur().getBroadcastOperations().sendEvent("maj_manche_rapide",phrase.toString());
-			new TimeOut(2, this, "MancheRapide");
+			timer  = new TimeOut(2, this, "MancheRapide");
 		}
 	}
 
 	public void mancheLongue() {
+		timer.getTimer().purge();
 		resetPhrase();
 		System.out.println("manche longue : ");
 		
@@ -145,6 +148,7 @@ public class GameManager {
 
 	public void choixJoueur() {
 		if(getJoueur(premierJoueur).getChoixAction().equals("")) {
+			System.out.println("ChoixJoueur");
 			new TimeOut(5,this,"ChoixJoueur");
 		}
 	}
@@ -217,5 +221,18 @@ public class GameManager {
 	
 	public ArrayList<Joueur> getJoueurs(){
 		return joueurs;
+	}
+
+	public void finDeFinale() {
+		timer.getTimer().purge();
+		server.getSocketServeur().getBroadcastOperations().sendEvent("fin_finale",gagnant(),getJoueur(gagnant()).getGainTotal()+"");
+	}
+
+	public void setTimerFinale() {
+		timer = new TimeOut(30,this,"Finale");
+	}
+
+	public void stopTimerFinale() {
+		timer.getTimer().cancel();
 	}
 }
