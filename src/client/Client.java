@@ -174,15 +174,22 @@ public class Client {
 					case "C":
 						if(i==2 || i==3) {
 							mSocket.emit("consonne",pseudo);
+						} else {
+							addToContent("choix erroné veuillez recommencer");
+							choixJoueur(i);
 						}
 						break;
 					case "V":
 						if(i==3 || i==1) {
 							mSocket.emit("voyelle",pseudo);
+						} else {
+							addToContent("choix erroné veuillez recommencer");
+							choixJoueur(i);
 						}
 						break;
 					case "R":
 						mSocket.emit("reponse",pseudo);
+						break;
 					default:
 						addToContent("choix erroné veuillez recommencer");
 						choixJoueur(i);

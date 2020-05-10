@@ -216,6 +216,7 @@ public class Serveur {
             		gainJoueur += game.getGainPotentiel();
             		game.getJoueur(game.gagnant()).setGainTotal(gainJoueur);
             		getSocketServeur().getBroadcastOperations().sendEvent("bonne_rep_finale",game.gagnant(),gainJoueur+"");
+                    server.getBroadcastOperations().sendEvent("fin_finale",game.gagnant(),game.getJoueur(game.gagnant()).getGainTotal()+"");
             	}
             	else {
             		socketIOClient.sendEvent("mauvaise_rep_finale",game.getPhrase().toString());
