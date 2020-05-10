@@ -321,7 +321,9 @@ public class Client {
 				if(nom.equals(pseudo)) {
 					addToContent((String)objects[1]);
 					addToContent("Choisissez un action à effectuer : ");
-					addToContent("c : proposer une consonne, v proposer une voyelle, r proposer une reponse");
+					addToContent("c : proposer une consonne");
+					addToContent("v : proposer une voyelle");
+					addToContent("r : proposer une reponse");
 					choixJoueur();
 				}
 				else {
@@ -371,6 +373,9 @@ public class Client {
 				addToContent((String)objects[0]);
 				addToContent((String)objects[1]);
 				addToContent("C'est à "+(String)objects[2]+" de jouer");
+				if(!((String)objects[2]).equals(pseudo)) {
+					addToContent((String)objects[3]);
+				}
 			}
 		});
 
@@ -466,13 +471,44 @@ public class Client {
 				String phrase = (String) objects[0];
 				String gagnant = (String) objects[1];
 				if(gagnant.equals(pseudo)) {
+					addToContent("<br>");
+					addToContent("------- Manche Finale -------");
 					addToContent(phrase); 
 					addToContent("Proposer 3 consonnes et 1 voyelle de cette façon: b c f a (voyelle en dernier)");
-					propositionFinale();
+					propositionLettreFinale();
 				}
 				else {
 					addToContent(gagnant+ " est en finale"); 
 				}
+			}
+		});
+		// reponse finale
+		mSocket.on("reponse_finale", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				String phrase = (String) objects[0];
+					addToContent(phrase);
+					addToContent("Veuillez porposez des réponses pendant 30s");
+					propositionFinale();
+			}
+		});
+		// mauvaise rep finale
+		mSocket.on("mauvaise_rep_finale", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				String phrase = (String) objects[0];
+				addToContent(phrase);
+				propositionFinale();
+			}
+		});
+		// bonne reponse finale
+		mSocket.on("bonne_rep_finale", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) { 
+				String nom = (String) objects[0];
+				String gain = (String) objects[1];
+				addToContent(nom+" a gagné "+gain+" de gains");
+				addToContent("Partie Terminée");
 			}
 		});
 		
@@ -489,24 +525,43 @@ public class Client {
 			@Override
 			public void call(Object... objects) { addToContent("Déconnexion"); }
 		});
+		
+		
 	}
 	
-	public void propositionFinale() {
-		ActionListener propositionFinaleListener = new ActionListener(){
+	public void propositionLettreFinale() {
+		ActionListener propositionLettreFinaleListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				if(textField.getText().length() > 0) {
 					String[] tab = textField.getText().split(" ");
 					for(int i=0; i<tab.length; i++) {
 						if(i<3 && !isConsonne(tab[i])) {
 							addToContent("Veuillez faire une proposition correcte");
-							propositionFinale();
+							propositionLettreFinale();
 						}
 						else if(i==3 && !isVoyelle(tab[i])) {
 							addToContent("Veuillez faire une proposition correcte");
-							propositionFinale();
+							propositionLettreFinale();
 						}
 					}
-					mSocket.emit("propostition_finale", textField.getText());
+					String rep = textField.getText();
+					textField.setText("");
+					mSocket.emit("proposition_finale",rep);
+				}
+			}
+		};
+		btnOK.removeActionListener(currentListener);
+		currentListener = propositionLettreFinaleListener;
+		btnOK.addActionListener(propositionLettreFinaleListener);
+	}
+	
+	public void propositionFinale() {
+		ActionListener propositionFinaleListener = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(textField.getText().length() > 0) {
+					String rep = textField.getText();
+					textField.setText("");
+					mSocket.emit("reponse_finale",rep.toUpperCase());
 				}
 			}
 		};

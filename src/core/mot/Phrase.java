@@ -172,6 +172,7 @@ public class Phrase {
 
 	public void resetPhrase(String phrase) {
 		rep = phrase;
+		lettrePropose = new char[26];
 		aTrouver = genererPhrase();
 	}
 }

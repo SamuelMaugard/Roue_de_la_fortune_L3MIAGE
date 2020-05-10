@@ -31,7 +31,7 @@ public class GameManager {
 		phrase = new Phrase(liste.getPhrase());
 		premierJoueur = "";
 		estTrouve = false;
-		nbManche=1;
+		nbManche=4;
 		roue = new Roue(true);
 		rouefinale = new Roue(false);
 	}
@@ -57,9 +57,7 @@ public class GameManager {
 		lettresFinale();
 		System.out.println(gagnant()+" va en finale");
 		server.getSocketServeur().getBroadcastOperations().sendEvent("finale",phrase.toString(),gagnant()); 
-		// TODO le joueur propose 3 consonnes et une voyelle
 		// TODO demander la reponse au joueur (temps limit�)
-		// si jamais ya besoin d'aide jui la
 	}
 	
 	public void lettresFinale() {

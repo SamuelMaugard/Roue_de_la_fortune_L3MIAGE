@@ -192,7 +192,23 @@ public class Serveur {
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
             	lettresFinales(rep,socketIOClient);
             }
-        });   
+        });
+        // reponse finale
+        server.addEventListener("reponse_finale", String.class, new DataListener<String>() {
+            @Override
+            public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
+            	System.out.println(rep);
+            	if(rep.equals(game.getPhrase().getPhraseJuste())) {
+            		int gainJoueur = game.getJoueur(game.gagnant()).getGainTotal();
+            		game.getJoueur(game.gagnant()).setGainManche(gainJoueur+game.getGainPotentiel());
+            		gainJoueur = game.getJoueur(game.gagnant()).getGainTotal();
+            		getSocketServeur().getBroadcastOperations().sendEvent("bonne_rep_finale",game.gagnant(),gainJoueur+"");
+            	}
+            	else {
+            		socketIOClient.sendEvent("mauvaise_rep_finale",game.getPhrase().toString());
+            	}
+            }
+        });
     }
     
     private void consonne(String rep, SocketIOClient socketIOClient) {
@@ -225,11 +241,22 @@ public class Serveur {
     }
     
     private void lettresFinales(String rep, SocketIOClient socketIOClient) {
-		//TODO remplacer les lettres proposées dans la phrase 
-    	//TODO renvoyer un message au client avec la socket pour demander une proposition de réponse
+    	System.out.println(rep);
+		remplacerLettres(rep); 
+		System.out.println("le message va s'envoyer");
+    	socketIOClient.sendEvent("reponse_finale",game.getPhrase().toString());
 	}
     
-    private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
+    private void remplacerLettres(String rep) {
+    	String[] tab = rep.split(" ");
+    	for(int i=0;i<tab.length;i++) {
+    		System.out.println(tab[i]);
+    		game.getPhrase().remplacerLettre(tab[i].charAt(0));
+    	}
+    	System.out.println("la fonction est finie");
+	}
+
+	private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
     	String[] repJoueur = rep.split(" ");
         String reponse = "";
         for(int i=0;i<repJoueur.length-1;i++) {
