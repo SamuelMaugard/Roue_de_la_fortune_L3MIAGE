@@ -141,6 +141,10 @@ public class Client {
 		contentLabel.setText(content);
 	}
 
+	public void resetContent() {
+		contentLabel.setText("<html></html>");
+	}
+
 	public void reponseMancheRapide() {
 		ActionListener reponseListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
@@ -309,6 +313,7 @@ public class Client {
 		mSocket.on("reject", new Emitter.Listener() {
 			@Override
 			public void call(Object... objects) {
+				resetContent();
 				addToContent("Connection refusé");
 				mSocket.disconnect();
 			}
@@ -638,14 +643,27 @@ public class Client {
 		});
 		mSocket.on("connect_failed", new Emitter.Listener() {
 			@Override
-			public void call(Object... objects) { addToContent("Connexion échoué"); }
+			public void call(Object... objects) {
+				resetContent();
+				addToContent("Connexion échoué");
+				askServer();
+			}
+		});
+		mSocket.on("connect_error", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				resetContent();
+				addToContent("Connexion échoué");
+				askServer();
+			}
 		});
 		mSocket.on("disconnect", new Emitter.Listener() {
 			@Override
-			public void call(Object... objects) { addToContent("Déconnexion"); }
+			public void call(Object... objects) {
+				addToContent("Déconnexion");
+				askServer();
+			}
 		});
-
-
 	}
 
 	public void propositionLettreFinale() {
