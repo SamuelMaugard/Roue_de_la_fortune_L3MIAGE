@@ -27,6 +27,7 @@ public class Client {
 	private JButton btnOK;
 	private ActionListener currentListener;
 	private JScrollPane scrPane;
+	private int nbChoix;
 
 	public Client() {
 		//Window params
@@ -158,7 +159,7 @@ public class Client {
 		btnOK.addActionListener(reponseListener);
 	}
 
-	public void choixJoueur() {
+	public void choixJoueur(int i) {
 		ActionListener choixListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				if(textField.getText().length() > 0) {
@@ -167,16 +168,20 @@ public class Client {
 					val=val.toUpperCase();
 					switch(val) {
 					case "C":
-						mSocket.emit("consonne",pseudo);
+						if(i==2 || i==3) {
+							mSocket.emit("consonne",pseudo);
+						}
 						break;
 					case "V":
-						mSocket.emit("voyelle",pseudo);
+						if(i==3 || i==1) {
+							mSocket.emit("voyelle",pseudo);
+						}
 						break;
 					case "R":
 						mSocket.emit("reponse",pseudo);
 					default:
 						addToContent("choix erroné veuillez recommencer");
-						choixJoueur();
+						choixJoueur(i);
 					}
 				}
 			}
@@ -184,6 +189,22 @@ public class Client {
 		btnOK.removeActionListener(currentListener);
 		currentListener = choixListener;
 		btnOK.addActionListener(choixListener);
+	}
+	
+	public void reponseMancheLongue() {
+		ActionListener reponseListener = new ActionListener(){
+			public void actionPerformed(ActionEvent event){
+				if(textField.getText().length() > 0) {
+					String val = textField.getText();
+					textField.setText("");
+					val=val.toUpperCase();
+					mSocket.emit("reponse_prop",val);
+				}
+			}
+		};
+		btnOK.removeActionListener(currentListener);
+		currentListener = reponseListener;
+		btnOK.addActionListener(reponseListener);
 	}
 
 	public void consonne() {
@@ -265,7 +286,7 @@ public class Client {
 		currentListener = reponseListener;
 		btnOK.addActionListener(reponseListener);
 	}
-	
+
 	public void setUpEventsListeners() {
 
 		//Ask pseudo
@@ -338,7 +359,8 @@ public class Client {
 					addToContent("c : proposer une consonne");
 					addToContent("v : proposer une voyelle");
 					addToContent("r : proposer une reponse");
-					choixJoueur();
+					nbChoix=3;
+					choixJoueur(3);
 				}
 				else {
 					addToContent((String)objects[1]);
@@ -346,6 +368,64 @@ public class Client {
 				}
 			}
 		});
+		// choix_cons_rep
+		mSocket.on("choix_cons_rep", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				String nom =(String)objects[0];
+				if(nom.equals(pseudo)) {
+					addToContent((String)objects[1]);
+					addToContent("Il n'y a plus de voyelle : ");
+					addToContent("Choisissez un action à effectuer : ");
+					addToContent("c : proposer une consonne");
+					addToContent("r : proposer une reponse");
+					nbChoix=2;
+					choixJoueur(2);
+				}
+				else {
+					addToContent((String)objects[1]);
+					addToContent((String)objects[0]+" doit choisir une action");
+				}
+			}
+		});
+		// choix voy_rep
+		mSocket.on("choix_voy_rep", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				String nom =(String)objects[0];
+				if(nom.equals(pseudo)) {
+					addToContent((String)objects[1]);
+					addToContent("Il n'y a plus de consonne : ");
+					addToContent("Choisissez un action à effectuer : ");
+					addToContent("v : proposer une voyelle");
+					addToContent("r : proposer une reponse");
+					nbChoix=1;
+					choixJoueur(1);
+				}
+				else {
+					addToContent((String)objects[1]);
+					addToContent((String)objects[0]+" doit choisir une action");
+				}
+			}
+		});
+		// rep
+		mSocket.on("choix_rep", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				String nom =(String)objects[0];
+				if(nom.equals(pseudo)) {
+					addToContent((String)objects[1]);
+					addToContent("Il n'y a plus de voyelle et de consonne  ");
+					addToContent("Veuillez proposez une reponse ");
+					reponseMancheLongue();
+				}
+				else {
+					addToContent((String)objects[1]);
+					addToContent((String)objects[0]+" doit choisir une action");
+				}
+			}
+		});
+
 		// banqueroute
 		mSocket.on("banqueroute", new Emitter.Listener() {
 			@Override
@@ -413,10 +493,10 @@ public class Client {
 			@Override
 			public void call(Object... objects) {
 				addToContent((String)objects[1]+" a proposé la lettre : "+(String)objects[0]);
-				
+
 			}
 		});
-		
+
 		// notbuy voyelle
 		mSocket.on("notbuy_voyelle", new Emitter.Listener() {
 			@Override
@@ -425,7 +505,7 @@ public class Client {
 				if(nom.equals(pseudo)) {
 					addToContent((String)objects[1]+(String)objects[0]);
 					addToContent("Veuillez faire un autre choix :");
-					choixJoueur();
+					choixJoueur(nbChoix);
 				}
 				else {
 					addToContent((String)objects[1]+(String)objects[0]);
@@ -446,7 +526,7 @@ public class Client {
 				}
 			}
 		});
-		
+
 		// proposer reponse
 		mSocket.on("reponse", new Emitter.Listener() {
 			@Override
@@ -475,7 +555,7 @@ public class Client {
 				addToContent((String)objects[0]+" a proposé une mauvaise réponse"); 
 			}
 		});
-		
+
 		// pas ton tour
 		mSocket.on("pas_ton_tour", new Emitter.Listener() {
 			@Override
@@ -486,7 +566,7 @@ public class Client {
 				}
 			}
 		});
-		
+
 		//finale
 		mSocket.on("finale", new Emitter.Listener() {
 			@Override
@@ -513,9 +593,9 @@ public class Client {
 			@Override
 			public void call(Object... objects) { 
 				String phrase = (String) objects[0];
-					addToContent(phrase);
-					addToContent("Vous avez 30s pour trouver la bonne réponse");
-					propositionFinale();
+				addToContent(phrase);
+				addToContent("Vous avez 30s pour trouver la bonne réponse");
+				propositionFinale();
 			}
 		});
 		// mauvaise rep finale
@@ -549,7 +629,7 @@ public class Client {
 				addToContent("Partie Terminée");
 			}
 		});
-		
+
 		//connection listeners
 		mSocket.on("connect", new Emitter.Listener() {
 			@Override
@@ -563,10 +643,10 @@ public class Client {
 			@Override
 			public void call(Object... objects) { addToContent("Déconnexion"); }
 		});
-		
-		
+
+
 	}
-	
+
 	public void propositionLettreFinale() {
 		ActionListener propositionLettreFinaleListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
@@ -592,7 +672,7 @@ public class Client {
 		currentListener = propositionLettreFinaleListener;
 		btnOK.addActionListener(propositionLettreFinaleListener);
 	}
-	
+
 	public void propositionFinale() {
 		ActionListener propositionFinaleListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){

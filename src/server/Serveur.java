@@ -246,7 +246,18 @@ public class Serveur {
     	int nbLettre = game.getPhrase().remplacerLettre(rep.charAt(0));
     	getSocketServeur().getBroadcastOperations().sendEvent("lettre_prop",rep,game.getPremierJoueur());
     	if(nbLettre>0) {
-    		getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+    		if(game.getPhrase().resteConsones() && game.getPhrase().resteVoyelle()) {
+    			getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",game.getPremierJoueur(),game.getPhrase().toString());
+    		}
+    		else if(game.getPhrase().resteConsones() && !game.getPhrase().resteVoyelle()){
+    			getSocketServeur().getBroadcastOperations().sendEvent("choix_cons_rep",game.getPremierJoueur(),game.getPhrase().toString());
+    		}
+    		else if(!game.getPhrase().resteConsones() && game.getPhrase().resteVoyelle()) {
+    			getSocketServeur().getBroadcastOperations().sendEvent("choix_voy_rep",game.getPremierJoueur(),game.getPhrase().toString());
+    		}
+    		else {
+    			getSocketServeur().getBroadcastOperations().sendEvent("choix_rep",game.getPremierJoueur(),game.getPhrase().toString());
+    		}
     	}
     	else {
         	socketIOClient.sendEvent("pas_ton_tour",game.getPremierJoueur());

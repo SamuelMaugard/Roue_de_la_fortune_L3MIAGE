@@ -108,14 +108,36 @@ public class GameManager {
 	}
 	
 	public void tourJoueur() {
-		Case c = roue.lancerRoue();
-		int effet = effetCase(c);
-		if(effet==-1) {
-			tourJoueur();
+		if(phrase.resteConsones() && phrase.resteVoyelle()) {
+			Case c = roue.lancerRoue();
+			int effet = effetCase(c);
+			if(effet==-1) {
+				tourJoueur();
+			}
+			else {
+				gainPotentiel=effet;
+				server.getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",premierJoueur,phrase.toString());
+				choixJoueur();
+			}
+		}
+		else if(phrase.resteConsones() && !phrase.resteVoyelle()) {
+			Case c = roue.lancerRoue();
+			int effet = effetCase(c);
+			if(effet==-1) {
+				tourJoueur();
+			}
+			else {
+				gainPotentiel=effet;
+				server.getSocketServeur().getBroadcastOperations().sendEvent("choix_cons_rep",premierJoueur,phrase.toString());
+				choixJoueur();
+			}
+		}
+		else if(!phrase.resteConsones() && phrase.resteVoyelle()) {
+			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_voy_rep",premierJoueur,phrase.toString());
+			choixJoueur();
 		}
 		else {
-			gainPotentiel=effet;
-			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",premierJoueur,phrase.toString());
+			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_rep",premierJoueur,phrase.toString());
 			choixJoueur();
 		}
 	}

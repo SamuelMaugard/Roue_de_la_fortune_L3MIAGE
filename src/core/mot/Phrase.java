@@ -104,7 +104,6 @@ public class Phrase {
 	 * @return true si il reste des consonnes
 	 */
 	public boolean resteConsones(){
-		//TODO se servir de cette methode pour le comportement du jeu
 		int consonneRep = 0 ;
 		int consonneATrouver = 0;
 
@@ -137,7 +136,6 @@ public class Phrase {
 	 * @return true si il reste des voyelle
 	 */
 	public boolean resteVoyelle(){
-		//TODO se servir de cette methode pour le comportement du jeu
 		int voyelleRep = 0 ;
 		int voyelleATrouver = 0;
 
