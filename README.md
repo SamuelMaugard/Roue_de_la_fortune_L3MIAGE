@@ -15,7 +15,7 @@ Mercuri Sabrina
 * Lancer le Serveur: *mvn exec:java -Dexec.mainClass=server.Serveur*  
 * Lancer le Client: *mvn exec:java -Dexec.mainClass=client.Client*  
 * Le serveur hébergé: *109.210.118.18*  
-__<span style="color:red">(Le serveur est hébergé sur un Raspberry, il est possible que le serveur crash. Si c'est le cas, envoyez un mail ou un message privé discord à *Sacha Bydouille#2959*)</span>__
+__<span style='color:red'>(Le serveur est hébergé sur un Raspberry, il est possible que le serveur crash. Si c'est le cas, envoyez un mail ou un message privé discord à *Sacha Bydouille#2959*)</span>__
 
 
 # Déroulement du jeu
