@@ -4,11 +4,7 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import io.socket.engineio.client.transports.WebSocket;
-import joueur.Joueur;
-import server.GameManager;
-
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -85,16 +81,19 @@ public class Client {
 			opts.transports = new String[] { WebSocket.NAME };
 			opts.reconnection = false;
 			opts.forceNew = true;
-			mSocket = IO.socket(serverAddress, opts);
+			mSocket = IO.socket("http://"+serverAddress+":10101/", opts);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			e.getStackTrace();
+			resetContent();
+			addToContent("Addresse non valide");
+			askServer();
 		}
 	}
 
 	public void askServer() {
 		addToContent("Entrez l'adresse du serveur host.");
-		addToContent("(http://127.0.0.1:10101/ en local.)");
-		textField.setText("http://127.0.0.1:10101/");
+		addToContent("(127.0.0.1 en local.)");
+		textField.setText("127.0.0.1");
 		ActionListener servLog = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				if(textField.getText().length() > 0) {
