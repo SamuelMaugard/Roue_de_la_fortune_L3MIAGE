@@ -57,8 +57,12 @@ public class Serveur {
         server.addConnectListener(new ConnectListener() {
             @Override
             public void onConnect(SocketIOClient socketIOClient) {
-                System.out.println(ConsoleColors.CYAN + "Connexion de ("+socketIOClient.getRemoteAddress()+")" + ConsoleColors.RESET);
-                socketIOClient.sendEvent("pseudo");
+                if(game.getJoueurs().size() >=2) {
+                    socketIOClient.sendEvent("reject");
+                } else {
+                    System.out.println(ConsoleColors.CYAN + "Connexion de ("+socketIOClient.getRemoteAddress()+")" + ConsoleColors.RESET);
+                    socketIOClient.sendEvent("pseudo");
+                }
             }
         });
         //Déconnexion
@@ -72,6 +76,12 @@ public class Serveur {
         server.addEventListener("reponse-pseudo", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String res, AckRequest ackRequest) throws InterruptedException{
+                for(Joueur j :game.getJoueurs()) {
+                    if(res.equals(j.getNom())) {
+                        res += "-2";
+                    }
+                }
+                socketIOClient.sendEvent("pseudo-update", res);
                 game.addJoueur(new Joueur(res, socketIOClient));
                 System.out.println(ConsoleColors.GREEN + res + " a rejoint la partie " +
                         "(" + game.getNumberplayers()+"/2)" + ConsoleColors.RESET

@@ -218,8 +218,6 @@ public class Client {
 		return true;
 	}
 
-
-
 	private void voyelle() {
 		ActionListener voyelleListener = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
@@ -270,11 +268,27 @@ public class Client {
 	
 	public void setUpEventsListeners() {
 
-		//Custom listeners
+		//Ask pseudo
 		mSocket.on("pseudo", new Emitter.Listener() {
 			@Override
 			public void call(Object... objects) {
 				mSocket.emit("reponse-pseudo", pseudo);
+			}
+		});
+		//Pseudo updated by the server
+		mSocket.on("pseudo-update", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				pseudo = (String)objects[0];
+				titre.setText("Roue de la fortune | " + pseudo);
+			}
+		});
+		//connection rejected by the server
+		mSocket.on("reject", new Emitter.Listener() {
+			@Override
+			public void call(Object... objects) {
+				addToContent("Connection refusé");
+				mSocket.disconnect();
 			}
 		});
 		// reponse manche rapide
