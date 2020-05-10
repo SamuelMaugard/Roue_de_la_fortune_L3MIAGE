@@ -226,9 +226,10 @@ public class Serveur {
         server.addEventListener("non", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	for(SocketIOClient s : server.getAllClients()) {
-            		s.disconnect();
-            	}
+                for(SocketIOClient s : server.getAllClients()) {
+                    game.deletePlayerBySocket(s);
+                    s.disconnect();
+                }
             }
         });
         // oui partie 
