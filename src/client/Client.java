@@ -152,7 +152,8 @@ public class Client {
 					val=val.toUpperCase();
 					textField.setText("");
 					addToContent("Réponse envoyé: " + val);
-					val+=" "+pseudo;
+					val+="\t"+pseudo;
+					addToContent(val);
 					mSocket.emit("reponse_manche_rapide",val);
 				}
 
@@ -639,10 +640,12 @@ public class Client {
 				addToContent("il repart donc avec les gains qu'il a eu pendant les autres manches");
 				addToContent("Gains de "+nom+" : "+gain);
 				addToContent("Partie Terminée");
-				addToContent("Voulez vous reocommencez une partie ?");
-				addToContent("o : oui");
-				addToContent("n : non");
-				recommencez();
+				if(nom.equals(pseudo)) {
+					addToContent("Voulez vous reocommencez une partie ?");
+					addToContent("o : oui");
+					addToContent("n : non");
+					recommencez();
+				}
 			}
 		});
 
@@ -728,7 +731,7 @@ public class Client {
 					case "O":
 						mSocket.emit("oui");
 						break;
-					case "V":
+					case "N":
 						mSocket.emit("non");
 						break;
 					}

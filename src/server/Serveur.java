@@ -96,7 +96,7 @@ public class Serveur {
         server.addEventListener("reponse_manche_rapide", String.class, new DataListener<String>() {
             @Override
             public void onData(SocketIOClient socketIOClient, String rep, AckRequest ackRequest){
-            	if(checkPseudo(rep.split(" ")[rep.split(" ").length-1])) {
+            	if(checkPseudo(rep.split("\t")[rep.split(" ").length-1])) {
             		socketIOClient.sendEvent("pas_ton_tour",rep.split(" ")[rep.split(" ").length-1]);
             	}
             	else {
@@ -301,12 +301,8 @@ public class Serveur {
 	}
 
 	private void reponseMancheRapide(String rep,SocketIOClient socketIOClient) {
-    	String[] repJoueur = rep.split(" ");
-        String reponse = "";
-        for(int i=0;i<repJoueur.length-1;i++) {
-        	reponse+=repJoueur[i]+" ";
-        }
-        reponse = reponse.substring(0,reponse.length()-1);
+    	String[] repJoueur = rep.split("\t");
+        String reponse = repJoueur[0];
         if(reponse.equals(game.getPhrase().getPhraseJuste())) {
         	System.out.println(repJoueur[repJoueur.length-1]+" a trouvé la reponse");
         	game.setEstTrouve(true);
