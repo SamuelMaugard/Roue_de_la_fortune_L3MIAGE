@@ -93,7 +93,8 @@ public class Client {
 	public void askServer() {
 		addToContent("Entrez l'adresse du serveur host.");
 		addToContent("(127.0.0.1 en local.)");
-		textField.setText("127.0.0.1");
+		addToContent("(109.210.118.18 sur le serveur hébergé.)");
+		textField.setText("109.210.118.18");
 		ActionListener servLog = new ActionListener(){
 			public void actionPerformed(ActionEvent event){
 				if(textField.getText().length() > 0) {
@@ -116,11 +117,17 @@ public class Client {
 				if(textField.getText().length() > 0) {
 					String val = textField.getText();
 					textField.setText("");
-					pseudo = val;
-					addToContent("Pseudo choisi: " + val);
-					setUpClient();
-					setUpEventsListeners();
-					mSocket.connect();
+					if(val.length() > 20) {
+						addToContent("Veuillez proposer un pseudo avec moins de 20 char");
+						askPseudo();
+					} else {
+						pseudo = val;
+						addToContent("Pseudo choisi: " + val);
+						setUpClient();
+						setUpEventsListeners();
+						mSocket.connect();
+					}
+
 				}
 
 			}
@@ -154,6 +161,7 @@ public class Client {
 					addToContent("Réponse envoyé: " + val);
 					val+="\t"+pseudo;
 					addToContent(val);
+
 					mSocket.emit("reponse_manche_rapide",val);
 				}
 
@@ -329,6 +337,7 @@ public class Client {
 		mSocket.on("manche_rapide", new Emitter.Listener() {
 			@Override
 			public void call(Object... objects) {
+				addToContent("----------- "+(String)objects[1]+" -----------");
 				addToContent("Debut de la manche rapide :");
 				addToContent("trouver la phrase suivante :");
 				addToContent((String)objects[0]);

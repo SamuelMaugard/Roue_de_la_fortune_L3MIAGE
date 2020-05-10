@@ -25,9 +25,6 @@ public class TimeOut {
                 case "MancheRapide":
                     gameManager.updateMancheRapide();
                     break;
-                case "ChoixJoueur":
-                	gameManager.choixJoueur();
-                	break;
                 case "Finale":
                 	gameManager.finDeFinale();
                 	break;

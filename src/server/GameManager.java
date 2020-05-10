@@ -117,7 +117,7 @@ public class GameManager {
 			else {
 				gainPotentiel=effet;
 				server.getSocketServeur().getBroadcastOperations().sendEvent("choix_joueur",premierJoueur,phrase.toString());
-				choixJoueur();
+
 			}
 		}
 		else if(phrase.resteConsones() && !phrase.resteVoyelle()) {
@@ -129,16 +129,16 @@ public class GameManager {
 			else {
 				gainPotentiel=effet;
 				server.getSocketServeur().getBroadcastOperations().sendEvent("choix_cons_rep",premierJoueur,phrase.toString());
-				choixJoueur();
+
 			}
 		}
 		else if(!phrase.resteConsones() && phrase.resteVoyelle()) {
 			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_voy_rep",premierJoueur,phrase.toString());
-			choixJoueur();
+
 		}
 		else {
 			server.getSocketServeur().getBroadcastOperations().sendEvent("choix_rep",premierJoueur,phrase.toString());
-			choixJoueur();
+
 		}
 	}
 
@@ -168,12 +168,7 @@ public class GameManager {
 		return joueurs.get(0);
 	}
 
-	public void choixJoueur() {
-		if(getJoueur(premierJoueur).getChoixAction().equals("")) {
-			System.out.println("ChoixJoueur");
-			new TimeOut(5,this,"ChoixJoueur");
-		}
-	}
+
 	public void resetPhrase() {
 		phrase.resetPhrase(liste.getPhrase());
 	}
