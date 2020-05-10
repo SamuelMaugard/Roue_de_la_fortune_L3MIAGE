@@ -32,7 +32,7 @@ public class GameManager {
 		phrase = new Phrase(liste.getPhrase());
 		premierJoueur = "";
 		estTrouve = false;
-		nbManche=4;
+		nbManche=1;
 		roue = new Roue(true);
 		rouefinale = new Roue(false);
 	}
@@ -237,6 +237,7 @@ public class GameManager {
 				String n = joueurs.get(i).getNom();
 				joueurs.remove(i);
 				System.out.println(ConsoleColors.GREEN + "Déconnexion de " + n + " ("+joueurs.size()+"/2)" + ConsoleColors.RESET);
+				resetGame();
 			}
 		}
 	}
@@ -259,16 +260,16 @@ public class GameManager {
 	}
 	
 	public void resetGame() {
-		if(joueurs.size()!=0) {
-			for(Joueur j : joueurs) {
-				j.setGainManche(0);
-				j.setGainTotal(0);
-			}
+		for(SocketIOClient s : server.getSocketServeur().getAllClients()) {
+			deletePlayerBySocket(s);
+			s.disconnect();
 		}
 		gainPotentiel=0;
 		nbManche=1;
 		estTrouve=false;
 		premierJoueur="";
 		liste = new ListePhrase();
+		phrase = new Phrase(liste.getPhrase());
+		timer.getTimer().cancel();
 	}
 }
